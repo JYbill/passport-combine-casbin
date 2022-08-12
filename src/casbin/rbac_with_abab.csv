@@ -1,0 +1,5 @@
+p, admin, /test, GET
+p2, r2.sub.age > 18 && r2.sub.age < 60, /test, GET, allow
+p2, r2.sub.age > 60 && r2.sub.age < 100, /test, GET, deny
+
+g, xiaoqinvar, admin

@@ -13,4 +13,8 @@ export default {
   security: {
     csrf: false,
   },
+  jwt: {
+    secret: 'xiaoqinvar`s security key.',
+    expiresIn: '2d', // https://github.com/vercel/ms
+  },
 } as MidwayConfig & DefaultConfig;

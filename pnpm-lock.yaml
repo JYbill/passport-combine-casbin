@@ -6,18 +6,23 @@ specifiers:
   '@midwayjs/core': ^3.0.0
   '@midwayjs/decorator': ^3.0.0
   '@midwayjs/egg-ts-helper': ^1.0.1
+  '@midwayjs/jwt': ^3.4.9
   '@midwayjs/mock': ^3.0.0
+  '@midwayjs/passport': '3'
   '@midwayjs/security': ^3.4.9
   '@midwayjs/web': ^3.0.0
-  '@prisma/client': ^4.2.1
+  '@prisma/client': ^3.4.0
   '@types/jest': ^26.0.10
   '@types/node': '14'
+  casbin: 5.14.0-beta.4
+  casbin-prisma-adapter: ^1.1.3
   cross-env: ^6.0.0
   egg: ^2.0.0
   egg-mock: ^3.26.0
   jest: ^26.4.0
   mwts: ^1.0.5
-  prisma: ^4.2.1
+  passport-jwt: ^4.0.0
+  prisma: ^3.4.0
   ts-jest: ^26.2.0
   typescript: ~4.6.0
 
@@ -25,10 +30,15 @@ dependencies:
   '@midwayjs/bootstrap': 3.4.9
   '@midwayjs/core': 3.4.9_@midwayjs+decorator@3.4.4
   '@midwayjs/decorator': 3.4.4
+  '@midwayjs/jwt': 3.4.9
+  '@midwayjs/passport': 3.4.9
   '@midwayjs/security': 3.4.9
   '@midwayjs/web': 3.4.9_@midwayjs+decorator@3.4.4
-  '@prisma/client': 4.2.1_prisma@4.2.1
+  '@prisma/client': 3.15.2_prisma@3.15.2
+  casbin: 5.14.0-beta.4
+  casbin-prisma-adapter: 1.1.3_52414ee953351779f524e415611bca37
   egg: 2.36.0
+  passport-jwt: 4.0.0
 
 devDependencies:
   '@midwayjs/cli': 1.3.11_bc0242c17e1c16c5355085759b793f48
@@ -40,7 +50,7 @@ devDependencies:
   egg-mock: 3.26.0
   jest: 26.6.3
   mwts: 1.3.0_typescript@4.6.4
-  prisma: 4.2.1
+  prisma: 3.15.2
   ts-jest: 26.5.6_jest@26.6.3+typescript@4.6.4
   typescript: 4.6.4
 
@@ -951,6 +961,12 @@ packages:
       picomatch: 2.3.1
     dev: false
 
+  /@midwayjs/jwt/3.4.9:
+    resolution: {integrity: sha512-h0mOb49Wzuner4if8lemz2SvZh2Qq68EfVxkDavpE6rHUiPnjaOqIBEZnavbQFYEZojfIPgU1rzU0zd/ne2ECg==}
+    dependencies:
+      jsonwebtoken: 8.5.1
+    dev: false
+
   /@midwayjs/locate/1.8.1:
     resolution: {integrity: sha512-ZlYKENlBOtN6ODZk9+iHdJcrV+IYk+CZXqyQMT6VzTmBoE/z/HnAxKq39uJsn+dzDTR+c18/qdYVRZ0feKSHMw==}
     dependencies:
@@ -1004,6 +1020,10 @@ packages:
       source-map-support: 0.5.21
       typescript: 4.6.4
     dev: true
+
+  /@midwayjs/passport/3.4.9:
+    resolution: {integrity: sha512-KVqcdyh3f4f6jV8MERMOLon/MB4n7lK1jGXOBHZdrQiHUFX8o8geB1LzXNmNjfaYqm9U/9RML5P14N9nI0X8ew==}
+    dev: false
 
   /@midwayjs/security/3.4.9:
     resolution: {integrity: sha512-HUR8Ry+UHn30jgmH2nuJhp5U1BOQfQcthbnwYUd2Ivj0fCyVkKUIFUGxblIEAvFyecOn0YjcM7R40X+n+rWR8Q==}
@@ -1072,9 +1092,9 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.13.0
 
-  /@prisma/client/4.2.1_prisma@4.2.1:
-    resolution: {integrity: sha512-PZBkY60+k5oix+e6IUfl3ub8TbRLNsPLdfWrdy2eh80WcHTaT+/UfvXf/B7gXedH7FRtbPFHZXk1hZenJiJZFQ==}
-    engines: {node: '>=14.17'}
+  /@prisma/client/3.15.2_prisma@3.15.2:
+    resolution: {integrity: sha512-ErqtwhX12ubPhU4d++30uFY/rPcyvjk+mdifaZO5SeM21zS3t4jQrscy8+6IyB0GIYshl5ldTq6JSBo1d63i8w==}
+    engines: {node: '>=12.6'}
     requiresBuild: true
     peerDependencies:
       prisma: '*'
@@ -1082,16 +1102,16 @@ packages:
       prisma:
         optional: true
     dependencies:
-      '@prisma/engines-version': 4.2.0-33.2920a97877e12e055c1333079b8d19cee7f33826
-      prisma: 4.2.1
+      '@prisma/engines-version': 3.15.1-1.461d6a05159055555eb7dfb337c9fb271cbd4d7e
+      prisma: 3.15.2
     dev: false
 
-  /@prisma/engines-version/4.2.0-33.2920a97877e12e055c1333079b8d19cee7f33826:
-    resolution: {integrity: sha512-tktkqdiwqE4QhmE088boPt+FwPj1Jub/zk+5F6sEfcRHzO5yz9jyMD5HFVtiwxZPLx/8Xg9ElnuTi8E5lWVQFQ==}
+  /@prisma/engines-version/3.15.1-1.461d6a05159055555eb7dfb337c9fb271cbd4d7e:
+    resolution: {integrity: sha512-e3k2Vd606efd1ZYy2NQKkT4C/pn31nehyLhVug6To/q8JT8FpiMrDy7zmm3KLF0L98NOQQcutaVtAPhzKhzn9w==}
     dev: false
 
-  /@prisma/engines/4.2.1:
-    resolution: {integrity: sha512-0KqBwREUOjBiHwITsQzw2DWfLHjntvbqzGRawj4sBMnIiL5CXwyDUKeHOwXzKMtNr1rEjxEsypM14g0CzLRK3g==}
+  /@prisma/engines/3.15.1-1.461d6a05159055555eb7dfb337c9fb271cbd4d7e:
+    resolution: {integrity: sha512-NHlojO1DFTsSi3FtEleL9QWXeSF/UjhCW0fgpi7bumnNZ4wj/eQ+BJJ5n2pgoOliTOGv9nX2qXvmHap7rJMNmg==}
     requiresBuild: true
     dev: true
 
@@ -1791,6 +1811,10 @@ packages:
       ee-first: 1.1.1
     dev: false
 
+  /await-lock/2.2.2:
+    resolution: {integrity: sha512-aDczADvlvTGajTDjcjpJMqRkOF6Qdz3YbPZm/PyW6tKPkx2hlYBzxMhEywM/tU72HrVZjgl5VCdRuMlA7pZ8Gw==}
+    dev: false
+
   /babel-jest/26.6.3_@babel+core@7.18.10:
     resolution: {integrity: sha512-pl4Q+GAVOHwvjrck6jKjvmGhnO3jHX/xuB9d27f+EJZ/6k+6nMuPjorrYp7s++bKKdANwzElBWnLWaObvTnaZA==}
     engines: {node: '>= 10.14.2'}
@@ -1917,7 +1941,6 @@ packages:
     resolution: {integrity: sha512-XnAIvQ8eM+kC6aULx6wuQiwVsnzsi9d3WxzV3FpWTGA19F621kwdbsAcFKXgKUHZWsy+mY6iL1sHTxWEFCytDA==}
     dependencies:
       balanced-match: 1.0.2
-    dev: true
 
   /braces/2.3.2:
     resolution: {integrity: sha512-aNdbnj9P8PjdXU4ybaWLK2IF3jc/EoDYbC7AazW6to3TRsfXxscC9UXOB5iDiEQrkyIbWp2SLQda4+QAa7nc3w==}
@@ -1969,12 +1992,23 @@ packages:
       node-int64: 0.4.0
     dev: true
 
+  /buffer-equal-constant-time/1.0.1:
+    resolution: {integrity: sha512-zRpUiDwd/xk6ADqPMATG8vc9VPrkck7T07OIx0gnjmJAnHnTVXNQG3vfvWNuiZIkwu9KrKdA1iJKfsfTVxE6NA==}
+    dev: false
+
   /buffer-from/1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
     dev: true
 
   /buffer/5.7.1:
     resolution: {integrity: sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==}
+    dependencies:
+      base64-js: 1.5.1
+      ieee754: 1.2.1
+    dev: false
+
+  /buffer/6.0.3:
+    resolution: {integrity: sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==}
     dependencies:
       base64-js: 1.5.1
       ieee754: 1.2.1
@@ -2088,6 +2122,27 @@ packages:
     dependencies:
       rsvp: 4.8.5
     dev: true
+
+  /casbin-prisma-adapter/1.1.3_52414ee953351779f524e415611bca37:
+    resolution: {integrity: sha512-N1DO6qMKI52jvoistDuKNxqDVfwADZF8ky6yJ9Yj4oEydwGy10kK77KPVx587/bmxky8tDwy84JsGqXVVS50eg==}
+    peerDependencies:
+      '@prisma/client': ^3.4.0
+      casbin: ^5.0.4
+      prisma: ^3.4.0
+    dependencies:
+      '@prisma/client': 3.15.2_prisma@3.15.2
+      casbin: 5.14.0-beta.4
+      prisma: 3.15.2
+    dev: false
+
+  /casbin/5.14.0-beta.4:
+    resolution: {integrity: sha512-QPU/IgTjRsJ6IymagY5+yIqulZRWk/srbLcgSlfxLTzZgup7IBIBIDvkxqzkseFTITeMPjKkJZVaXoGeBmygbw==}
+    dependencies:
+      await-lock: 2.2.2
+      buffer: 6.0.3
+      expression-eval: 4.0.0
+      minimatch: 5.1.0
+    dev: false
 
   /cfork/1.8.0:
     resolution: {integrity: sha512-DrCPQ4GWbaz4cJWRKh7YycAa0o2V1pFJyUNpCGWSzMGKlLY1+yRnnbBQzz/2BIafcu4UUDFoNIme8pF6b15fGg==}
@@ -2718,6 +2773,12 @@ packages:
   /eastasianwidth/0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
     dev: true
+
+  /ecdsa-sig-formatter/1.0.11:
+    resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
+    dependencies:
+      safe-buffer: 5.2.1
+    dev: false
 
   /ee-first/1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
@@ -3410,6 +3471,12 @@ packages:
       jest-message-util: 26.6.2
       jest-regex-util: 26.0.0
     dev: true
+
+  /expression-eval/4.0.0:
+    resolution: {integrity: sha512-YHSnLTyIb9IKaho2IdQbvlei/pElxnGm48UgaXJ1Fe5au95Ck0R9ftm6rHJQuKw3FguZZ4eXVllJFFFc7LX0WQ==}
+    dependencies:
+      jsep: 0.3.5
+    dev: false
 
   /extend-shallow/2.0.1:
     resolution: {integrity: sha512-zCnTtlxNoAiDc3gqY2aYAWFx7XWWiasuF2K8Me5WbN8otHKTUKBwjPtNpRs/rbUZm7KxWAaNj7P1a/p52GbVug==}
@@ -5170,6 +5237,11 @@ packages:
       - utf-8-validate
     dev: true
 
+  /jsep/0.3.5:
+    resolution: {integrity: sha512-AoRLBDc6JNnKjNcmonituEABS5bcfqDhQAWWXNTFrqu6nVXBpBAGfcoTGZMFlIrh9FjmE1CQyX9CTNwZrXMMDA==}
+    engines: {node: '>= 6.0.0'}
+    dev: false
+
   /jsesc/2.5.2:
     resolution: {integrity: sha512-OYu7XEzjkCQ3C5Ps3QIZsQfNpqoJyZZA99wd9aWd05NCtC5pWOkShK2mkL6HXQR6/Cy2lbNdPlZBpuQHXE63gA==}
     engines: {node: '>=4'}
@@ -5229,6 +5301,37 @@ packages:
   /jsonp-body/1.0.0:
     resolution: {integrity: sha512-jv6gqQPPOP7mrOqGOQr1U++VzTsumU9JwW+igKcBHHe4qrgLzcvqUoDeByj61AZYIGAocd9FaYxVcvfHWCnJ7g==}
     engines: {node: '>= 0.10.0'}
+    dev: false
+
+  /jsonwebtoken/8.5.1:
+    resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
+    engines: {node: '>=4', npm: '>=1.4.28'}
+    dependencies:
+      jws: 3.2.2
+      lodash.includes: 4.3.0
+      lodash.isboolean: 3.0.3
+      lodash.isinteger: 4.0.4
+      lodash.isnumber: 3.0.3
+      lodash.isplainobject: 4.0.6
+      lodash.isstring: 4.0.1
+      lodash.once: 4.1.1
+      ms: 2.1.3
+      semver: 5.7.1
+    dev: false
+
+  /jwa/1.4.1:
+    resolution: {integrity: sha512-qiLX/xhEEFKUAJ6FiBMbes3w9ATzyk5W7Hvzpa/SLYdxNtng+gcurvrI7TbACjIXlsJyr05/S1oUhZrc63evQA==}
+    dependencies:
+      buffer-equal-constant-time: 1.0.1
+      ecdsa-sig-formatter: 1.0.11
+      safe-buffer: 5.2.1
+    dev: false
+
+  /jws/3.2.2:
+    resolution: {integrity: sha512-YHlZCB6lMTllWDtSPHz/ZXTsi8S00usEV6v1tjq8tOUZzw7DpSDWVXjXDre6ed1w/pd495ODpHZYSdkRTsa0HA==}
+    dependencies:
+      jwa: 1.4.1
+      safe-buffer: 5.2.1
     dev: false
 
   /keygrip/1.1.0:
@@ -5449,9 +5552,37 @@ packages:
       p-locate: 5.0.0
     dev: false
 
+  /lodash.includes/4.3.0:
+    resolution: {integrity: sha512-W3Bx6mdkRTGtlJISOvVD/lbqjTlPPUDTMnlXZFnVwi9NKJ6tiAk6LVdlhZMm17VZisqhKcgzpO5Wz91PCt5b0w==}
+    dev: false
+
+  /lodash.isboolean/3.0.3:
+    resolution: {integrity: sha512-Bz5mupy2SVbPHURB98VAcw+aHh4vRV5IPNhILUCsOzRmsTmSQ17jIuqopAentWoehktxGd9e/hbIXq980/1QJg==}
+    dev: false
+
+  /lodash.isinteger/4.0.4:
+    resolution: {integrity: sha512-DBwtEWN2caHQ9/imiNeEA5ys1JoRtRfY3d7V9wkqtbycnAmTvRRmbHKDV4a0EYc678/dia0jrte4tjYwVBaZUA==}
+    dev: false
+
+  /lodash.isnumber/3.0.3:
+    resolution: {integrity: sha512-QYqzpfwO3/CWf3XP+Z+tkQsfaLL/EnUlXWVkIk5FUPc4sBdTehEqZONuyRt2P67PXAk+NXmTBcc97zw9t1FQrw==}
+    dev: false
+
+  /lodash.isplainobject/4.0.6:
+    resolution: {integrity: sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==}
+    dev: false
+
+  /lodash.isstring/4.0.1:
+    resolution: {integrity: sha512-0wJxfxH1wgO3GrbuP+dTTk7op+6L41QCXbGINEmD+ny/G/eCqGzxyCsh7159S+mgDDcoarnBw6PC1PS5+wUGgw==}
+    dev: false
+
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
     dev: true
+
+  /lodash.once/4.1.1:
+    resolution: {integrity: sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==}
+    dev: false
 
   /lodash.truncate/4.4.2:
     resolution: {integrity: sha512-jttmRe7bRse52OsWIMDLaXxWqRAmtIUccAQ3garviCqJjafXOfNMO0yMfNpdD6zbGaTU0P5Nz7e7gAT6cKmJRw==}
@@ -5656,7 +5787,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       brace-expansion: 2.0.1
-    dev: true
 
   /minimist-options/4.1.0:
     resolution: {integrity: sha512-Q4r8ghd80yhO/0j1O3B2BjweX3fiHg9cdOwjJd2J76Q135c+NDxGCqdYKQ1SKBuFfgWbAUzBfvYjPUEeNgqN1A==}
@@ -6153,6 +6283,18 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /passport-jwt/4.0.0:
+    resolution: {integrity: sha512-BwC0n2GP/1hMVjR4QpnvqA61TxenUMlmfNjYNgK0ZAs0HK4SOQkHcSv4L328blNTLtHq7DbmvyNJiH+bn6C5Mg==}
+    dependencies:
+      jsonwebtoken: 8.5.1
+      passport-strategy: 1.0.0
+    dev: false
+
+  /passport-strategy/1.0.0:
+    resolution: {integrity: sha512-CB97UUvDKJde2V0KDWWB3lyf6PC3FaZP7YxZ2G8OAtn9p4HI9j9JLP9qjOGZFvyl8uwNT8qM+hGnz/n16NI7oA==}
+    engines: {node: '>= 0.4.0'}
+    dev: false
+
   /path-dirname/1.0.2:
     resolution: {integrity: sha512-ALzNPpyNq9AqXMBjeymIjFDAkAFH06mHJH/cSBHAgU0s4vfpBn6b2nf8tiRLvagKD8RbTpq2FKTBg7cl9l3c7Q==}
     dev: true
@@ -6369,13 +6511,13 @@ packages:
       react-is: 17.0.2
     dev: true
 
-  /prisma/4.2.1:
-    resolution: {integrity: sha512-HuYqnTDgH8atjPGtYmY0Ql9XrrJnfW7daG1PtAJRW0E6gJxc50lY3vrIDn0yjMR3TvRlypjTcspQX8DT+xD4Sg==}
-    engines: {node: '>=14.17'}
+  /prisma/3.15.2:
+    resolution: {integrity: sha512-nMNSMZvtwrvoEQ/mui8L/aiCLZRCj5t6L3yujKpcDhIPk7garp8tL4nMx2+oYsN0FWBacevJhazfXAbV1kfBzA==}
+    engines: {node: '>=12.6'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      '@prisma/engines': 4.2.1
+      '@prisma/engines': 3.15.1-1.461d6a05159055555eb7dfb337c9fb271cbd4d7e
     dev: true
 
   /process-nextick-args/2.0.1:

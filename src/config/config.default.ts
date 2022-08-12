@@ -14,11 +14,6 @@ export default (appInfo: MidwayAppInfo) => {
       },
       client: {},
     },
-    security: {
-      csrf: {
-        enable: false,
-      },
-    },
     midwayLogger: {
       clients: {
         middlewareLogger: {

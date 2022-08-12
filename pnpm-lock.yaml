@@ -7,7 +7,9 @@ specifiers:
   '@midwayjs/decorator': ^3.0.0
   '@midwayjs/egg-ts-helper': ^1.0.1
   '@midwayjs/mock': ^3.0.0
+  '@midwayjs/security': ^3.4.9
   '@midwayjs/web': ^3.0.0
+  '@prisma/client': ^4.2.1
   '@types/jest': ^26.0.10
   '@types/node': '14'
   cross-env: ^6.0.0
@@ -23,7 +25,9 @@ dependencies:
   '@midwayjs/bootstrap': 3.4.9
   '@midwayjs/core': 3.4.9_@midwayjs+decorator@3.4.4
   '@midwayjs/decorator': 3.4.4
+  '@midwayjs/security': 3.4.9
   '@midwayjs/web': 3.4.9_@midwayjs+decorator@3.4.4
+  '@prisma/client': 4.2.1_prisma@4.2.1
   egg: 2.36.0
 
 devDependencies:
@@ -1001,6 +1005,18 @@ packages:
       typescript: 4.6.4
     dev: true
 
+  /@midwayjs/security/3.4.9:
+    resolution: {integrity: sha512-HUR8Ry+UHn30jgmH2nuJhp5U1BOQfQcthbnwYUd2Ivj0fCyVkKUIFUGxblIEAvFyecOn0YjcM7R40X+n+rWR8Q==}
+    engines: {node: '>=12'}
+    dependencies:
+      csrf: 3.1.0
+      escape-html: 1.0.3
+      nanoid: 3.3.4
+      picomatch: 2.3.1
+      platform: 1.3.6
+      xss: 1.0.13
+    dev: false
+
   /@midwayjs/serverless-spec-builder/1.3.11:
     resolution: {integrity: sha512-dacxVWU8Ik4qyzYI/pgPsYE2K9fVyx7CF0SlR+n0aB6z/WnAEetQUyB7pFFDIktLfy5e3Muj0/aQ9LsGVmGzkw==}
     engines: {node: '>= 10'}
@@ -1055,6 +1071,24 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.13.0
+
+  /@prisma/client/4.2.1_prisma@4.2.1:
+    resolution: {integrity: sha512-PZBkY60+k5oix+e6IUfl3ub8TbRLNsPLdfWrdy2eh80WcHTaT+/UfvXf/B7gXedH7FRtbPFHZXk1hZenJiJZFQ==}
+    engines: {node: '>=14.17'}
+    requiresBuild: true
+    peerDependencies:
+      prisma: '*'
+    peerDependenciesMeta:
+      prisma:
+        optional: true
+    dependencies:
+      '@prisma/engines-version': 4.2.0-33.2920a97877e12e055c1333079b8d19cee7f33826
+      prisma: 4.2.1
+    dev: false
+
+  /@prisma/engines-version/4.2.0-33.2920a97877e12e055c1333079b8d19cee7f33826:
+    resolution: {integrity: sha512-tktkqdiwqE4QhmE088boPt+FwPj1Jub/zk+5F6sEfcRHzO5yz9jyMD5HFVtiwxZPLx/8Xg9ElnuTi8E5lWVQFQ==}
+    dev: false
 
   /@prisma/engines/4.2.1:
     resolution: {integrity: sha512-0KqBwREUOjBiHwITsQzw2DWfLHjntvbqzGRawj4sBMnIiL5CXwyDUKeHOwXzKMtNr1rEjxEsypM14g0CzLRK3g==}

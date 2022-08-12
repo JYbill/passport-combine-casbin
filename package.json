@@ -7,7 +7,9 @@
     "@midwayjs/bootstrap": "^3.0.0",
     "@midwayjs/core": "^3.0.0",
     "@midwayjs/decorator": "^3.0.0",
+    "@midwayjs/security": "^3.4.9",
     "@midwayjs/web": "^3.0.0",
+    "@prisma/client": "^4.2.1",
     "egg": "^2.0.0"
   },
   "devDependencies": {
@@ -37,7 +39,7 @@
     "ci": "npm run cov",
     "build": "midway-bin build -c",
     "prisma:generate": "prisma generate",
-    "prisma:pull": "prisma db pull"
+    "prisma:push": "prisma db push"
   },
   "midway-bin-clean": [
     ".vscode/.tsbuildinfo",

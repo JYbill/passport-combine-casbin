@@ -5,10 +5,33 @@ export default (appInfo: MidwayAppInfo) => {
     // use for cookie sign key, should change to your own and keep security
     keys: appInfo.name + '_1660201279657_1446',
     egg: {
-      port: 7001,
+      port: 7003,
     },
-    // security: {
-    //   csrf: false,
-    // },
+    prismaConfig: {
+      default: {
+        log: ['query', 'info', 'warn', 'error'],
+        errorFormat: 'pretty',
+      },
+      client: {},
+    },
+    security: {
+      csrf: {
+        enable: false,
+      },
+    },
+    midwayLogger: {
+      clients: {
+        middlewareLogger: {
+          fileLogName: 'request.log',
+          format: info => {
+            const ctx = info.ctx;
+            console.log(info);
+            return `${info.timestamp} ${info.LEVEL} ${info.pid} [${
+              Date.now() - ctx.startTime
+            }ms ${ctx.method}] ${info.message}`;
+          },
+        },
+      },
+    },
   } as MidwayConfig;
 };

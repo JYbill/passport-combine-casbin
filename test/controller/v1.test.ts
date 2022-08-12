@@ -15,16 +15,10 @@ describe('test/controller/v1.test.ts', () => {
     await close(app);
   });
 
-  it('should GET /', async () => {
-    // make request
-    const result = await createHttpRequest(app).get('/');
-
-    // use expect by jest
-    expect(result.status).toBe(200);
-    expect(result.text).toBe('Hello Midwayjs!');
-
-    // or use assert
-    assert.deepStrictEqual(result.status, 200);
-    assert.deepStrictEqual(result.text, 'Hello Midwayjs!');
+  it('should GET v1', async () => {
+    // GET /v1/
+    const v1Result = await createHttpRequest(app).get('/v1/');
+    expect(v1Result.status).toBe(200);
+    expect(v1Result.text).toBe('hello v1 api.');
   });
 });

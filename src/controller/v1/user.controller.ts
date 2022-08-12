@@ -21,10 +21,8 @@ export class UserController {
   @Logger()
   logger: ILogger;
 
-  @Post('/verify', { middleware: [JwtPassportMiddleware] })
-  async jwtPassport(@Headers('authorization') token: string) {
-    this.logger.info(token);
-    // console.log(this.jwt.verifySync(token, {}));
+  @Post('/verify')
+  async jwtPassport() {
     return this.ctx.state;
   }
 

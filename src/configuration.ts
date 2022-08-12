@@ -1,3 +1,4 @@
+import { JwtPassportMiddleware } from './middleware/jwt.middleware';
 import { CasbinMiddleware } from './middleware/casbin.middleware';
 import { PrismaClient } from '@prisma/client';
 import { App, Configuration, Inject } from '@midwayjs/decorator';
@@ -25,7 +26,13 @@ export class ContainerLifeCycle implements ILifeCycle {
   prismaClient: PrismaClient;
 
   async onReady() {
+    // result -> log -> jwt -> casbin -> request
+    // filter <- result <- log <- jwt <- casbin <- request
     this.app.useMiddleware([LogMiddleware, CasbinMiddleware]);
+    // jwt认证一定要在casbin授权之前！
+    this.app
+      .getMiddleware()
+      .insertBefore(JwtPassportMiddleware, 'casbin-middleware');
     // 最前面的中间件
     this.app.getMiddleware().insertFirst(ResultMiddleware);
     this.app.useFilter([

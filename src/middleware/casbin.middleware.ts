@@ -11,13 +11,16 @@ import {
   MidwayHttpError,
   NextFunction,
 } from '@midwayjs/core';
-import { Inject, Middleware } from '@midwayjs/decorator';
+import { Config, Inject, Middleware } from '@midwayjs/decorator';
 import { Casbin } from '../ioc/casbin';
 
 @Middleware()
 export class CasbinMiddleware implements IMiddleware<Context, NextFunction> {
   @Inject()
   private casbin: Casbin;
+
+  @Config('middlewareWhiteList')
+  ignoreWhiteList: string[];
 
   resolve() {
     return async (ctx: Context, next: NextFunction) => {
@@ -28,13 +31,6 @@ export class CasbinMiddleware implements IMiddleware<Context, NextFunction> {
       // header
       const header = ctx['header'];
       const logger = ctx.getLogger();
-
-      // 过滤公共接口
-      // TODO: 之后需要一个中间件代替
-      const whiteList = ['/v1/user/login', '/v1/user/verify'];
-      if (whiteList.includes(path)) {
-        return next();
-      }
 
       // 整理参数
       const subject = '';
@@ -57,5 +53,14 @@ export class CasbinMiddleware implements IMiddleware<Context, NextFunction> {
 
   static getName(): string {
     return 'casbin-middleware';
+  }
+
+  /**
+   * 忽略配置白名单
+   * @param ctx
+   * @returns
+   */
+  ignore(ctx: Context): boolean {
+    return this.ignoreWhiteList.includes(ctx.path);
   }
 }

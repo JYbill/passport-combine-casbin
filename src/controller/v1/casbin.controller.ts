@@ -29,6 +29,11 @@ export class CasbinController {
     return 'hello v1 api.';
   }
 
+  @Post('/index')
+  async indexPost() {
+    return '[POST index]';
+  }
+
   @Get('/test')
   async test() {
     return this.casbinService.findAllRules();

@@ -1,3 +1,5 @@
+import { ILogger } from '@midwayjs/core';
+import { Context } from 'egg';
 /**
  * @file: user.controller.ts
  * @author: xiaoqinvar
@@ -5,8 +7,7 @@
  * @date: 2022-08-12 17:00:15
  */
 import { JwtPassportMiddleware } from './../../middleware/jwt.middleware';
-import { Context } from '@midwayjs/core';
-import { Controller, Inject, Post } from '@midwayjs/decorator';
+import { Controller, Headers, Inject, Logger, Post } from '@midwayjs/decorator';
 import { JwtService } from '@midwayjs/jwt';
 
 @Controller('/v1/user')
@@ -17,16 +18,22 @@ export class UserController {
   @Inject()
   jwt: JwtService;
 
-  @Post('/passport/jwt', { middleware: [JwtPassportMiddleware] })
-  async jwtPassport() {
-    console.log('jwt user: ', this.ctx['state'].user);
-    return this.ctx['state'].user;
+  @Logger()
+  logger: ILogger;
+
+  @Post('/verify', { middleware: [JwtPassportMiddleware] })
+  async jwtPassport(@Headers('authorization') token: string) {
+    this.logger.info(token);
+    // console.log(this.jwt.verifySync(token, {}));
+    return this.ctx.state;
   }
 
-  @Post('/jwt')
+  @Post('/login')
   async login() {
-    return {
-      t: await this.jwt.sign({ msg: 'Hello Midway' }),
-    };
+    return await this.jwt.sign({
+      uname: 'xiaoqinvar',
+      age: 22,
+      job: 'nodejs stack engineer',
+    });
   }
 }

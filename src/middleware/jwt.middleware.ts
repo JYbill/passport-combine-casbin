@@ -5,6 +5,10 @@ import { JwtStrategy } from '../strategy/jwt.strategy';
 @Middleware()
 export class JwtPassportMiddleware extends PassportMiddleware(JwtStrategy) {
   getAuthenticateOptions(): Promise<AuthenticateOptions> | AuthenticateOptions {
-    return {};
+    return {
+      successMessage: '校验成功',
+      failureRedirect: '/v1/casbin/test',
+      failureMessage: '⚠️  token无效！',
+    };
   }
 }

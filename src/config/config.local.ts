@@ -13,6 +13,10 @@ export default {
   security: {
     csrf: false,
   },
+  // 关闭passport 校验通过后序列化成json，有需要可以改为true，并按照官网重写，注意V8只会给你分配1400M左右的堆内存大小，需要序列化推荐redis
+  passport: {
+    session: false,
+  },
   jwt: {
     secret: 'xiaoqinvar`s security key.',
     expiresIn: '2d', // https://github.com/vercel/ms

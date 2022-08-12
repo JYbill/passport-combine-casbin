@@ -12,10 +12,13 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   logger: ILogger;
 
   async validate(payload) {
-    this.logger.info(payload);
     return payload;
   }
 
+  /**
+   * option 参考：passport-jwt
+   * @returns
+   */
   getStrategyOptions(): any {
     return {
       secretOrKey: this.jwtConfig.secret,

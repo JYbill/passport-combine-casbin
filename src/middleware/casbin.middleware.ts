@@ -29,6 +29,13 @@ export class CasbinMiddleware implements IMiddleware<Context, NextFunction> {
       const header = ctx['header'];
       const logger = ctx.getLogger();
 
+      // 过滤公共接口
+      // TODO: 之后需要一个中间件代替
+      const whiteList = ['/v1/user/login', '/v1/user/verify'];
+      if (whiteList.includes(path)) {
+        return next();
+      }
+
       // 整理参数
       const subject = '';
       const object = '/error';

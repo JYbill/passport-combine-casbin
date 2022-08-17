@@ -27,10 +27,10 @@ export class CasbinMiddleware implements IMiddleware<Context, NextFunction> {
       // init
       const enforcer = this.casbin.getEnforcer();
       // uri：/v1/xxx
-      const path = ctx['path'];
-      // header
-      const header = ctx['header'];
-      const logger = ctx.getLogger();
+      // const path = ctx.path;
+      // jwt
+      // const user = ctx.state.user;
+      // const logger = ctx.getLogger();
 
       // 整理参数
       const subject = '';

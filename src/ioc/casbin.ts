@@ -1,77 +1,26 @@
-import { ILogger } from '@midwayjs/core';
-import { Application } from 'egg';
-import {
-  App,
-  Config,
-  Init,
-  Logger,
-  Provide,
-  Scope,
-  ScopeEnum,
-} from '@midwayjs/decorator';
-import {
-  Enforcer,
-  MemoryAdapter,
-  newEnforcer,
-  newModel,
-  newModelFromString,
-} from 'casbin';
-import { PrismaAdapter } from 'casbin-prisma-adapter';
-import { resolve } from 'path';
+/**
+ * @file: casbin.ts
+ * @author: xiaoqinvar
+ * @desc：casbin 动态函数注入enforce
+ * @date: 2022-08-20 18:42:15
+ */
+import { IMidwayContainer, providerWrapper } from '@midwayjs/core';
+import { ScopeEnum } from '@midwayjs/decorator';
+import { CasbinFactory } from './casbinFactory';
 
-@Provide()
-@Scope(ScopeEnum.Singleton)
-export class Casbin {
-  private enforcer: Enforcer;
-
-  @App()
-  app: Application;
-
-  @Logger()
-  logger: ILogger;
-
-  // @Config('redis')
-  // private redisConfig;
-
-  @Init()
-  public async init(): Promise<void> {
-    const adapter = await PrismaAdapter.newAdapter();
-    const model = newModelFromString(`
-    [request_definition]
-    r = sub, obj, act
-    r2 = sub, obj, act
-    
-    [policy_definition]
-    p = sub, obj, act
-    p2= sub_rule, obj, act, eft
-    
-    [role_definition]
-    g = _, _
-    
-    [policy_effect]
-    e = some(where (p.eft == allow))
-    
-    [matchers]
-    #RABC
-    m = g(r.sub.uname, p.sub) && r.obj == p.obj && r.act == p.act
-    #ABAC
-    m2 = eval(p2.sub_rule) && r2.obj == p2.obj && r2.act == p2.act && p2.eft == 'allow'
-    `);
-    this.enforcer = await newEnforcer(model, adapter);
-    // redis watcher
-    // const watcher = await RedisWatcher.newWatcher(
-    //   this.redisConfig.clients.session
-    // );
-    // this.enforcer.setWatcher(watcher);
-
-    // await e.addPolicy(...);
-    // await e.removePolicy(...);
-
-    // Save the policy back to DB.
-    // await e.savePolicy();
-  }
-
-  public getEnforcer(): Enforcer {
-    return this.enforcer;
+export async function dynamicCasbinHandler(container: IMidwayContainer) {
+  try {
+    const casbin: CasbinFactory = await container.getAsync('casbinFactory');
+    return casbin.enforcer;
+  } catch (error) {
+    console.log(error);
   }
 }
+
+providerWrapper([
+  {
+    id: 'enforcer',
+    provider: dynamicCasbinHandler,
+    scope: ScopeEnum.Singleton, // 也可以设置为全局作用域，那么里面的调用的逻辑将被缓存
+  },
+]);

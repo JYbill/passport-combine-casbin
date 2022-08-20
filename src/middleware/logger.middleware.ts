@@ -10,8 +10,8 @@ export class LogMiddleware implements IMiddleware<Context, NextFunction> {
   resolve() {
     return async (ctx: Context, next: NextFunction) => {
       const logger = ctx.getLogger('middlewareLogger');
-      const result = await next();
       logger.info('');
+      const result = await next();
       return result;
     };
   }

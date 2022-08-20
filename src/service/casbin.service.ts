@@ -6,12 +6,17 @@
  */
 import { CasbinRule, PrismaClient } from '@prisma/client';
 import { ILogger } from '@midwayjs/core';
-import { Inject, Logger, Provide } from '@midwayjs/decorator';
+import { Init, Inject, Logger, Provide } from '@midwayjs/decorator';
+import { Enforcer } from 'casbin';
+import Role from '../enum/role.enum';
 
 @Provide()
 export class CasbinService {
   @Inject('prismaClient')
   prisma: PrismaClient;
+
+  @Inject()
+  enforcer: Enforcer;
 
   @Logger()
   logger: ILogger;
@@ -33,5 +38,14 @@ export class CasbinService {
     return this.prisma.casbinRule.createMany({
       data: [...casbinRules],
     });
+  }
+
+  /**
+   * 分配普通管理员角色给用户
+   * @param username
+   * @returns
+   */
+  async addRoleForUser(username: string) {
+    return this.enforcer.addNamedGroupingPolicy('p', username, Role.MANAGER);
   }
 }

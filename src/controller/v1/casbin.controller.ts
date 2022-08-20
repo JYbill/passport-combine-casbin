@@ -5,14 +5,7 @@
  * @date: 2022-08-12 11:37:57
  */
 import { ILogger } from '@midwayjs/core';
-import {
-  Body,
-  Controller,
-  Get,
-  Inject,
-  Logger,
-  Post,
-} from '@midwayjs/decorator';
+import { Body, Controller, Get, Inject, Logger, Post } from '@midwayjs/decorator';
 import { CasbinRule } from '@prisma/client';
 import { CasbinService } from '../../service/casbin.service';
 
@@ -23,24 +16,4 @@ export class CasbinController {
 
   @Logger()
   logger: ILogger;
-
-  @Get('/')
-  async index() {
-    return 'hello v1 api.';
-  }
-
-  @Post('/index')
-  async indexPost() {
-    return '[POST index]';
-  }
-
-  @Get('/test')
-  async test() {
-    return this.casbinService.findAllRules();
-  }
-
-  @Post('/')
-  async create(@Body() casbinRules: CasbinRule[]) {
-    return this.casbinService.insertRules(casbinRules);
-  }
 }

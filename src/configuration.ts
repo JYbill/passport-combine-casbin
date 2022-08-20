@@ -13,9 +13,10 @@ import { NotFoundFilter } from './filter/notFound.filter';
 import { ResultMiddleware } from './middleware/result.middleware';
 import * as jwt from '@midwayjs/jwt';
 import * as passport from '@midwayjs/passport';
+import * as validate from '@midwayjs/validate';
 
 @Configuration({
-  imports: [egg, jwt, passport],
+  imports: [egg, jwt, passport, validate],
   importConfigs: [join(__dirname, './config')],
 })
 export class ContainerLifeCycle implements ILifeCycle {

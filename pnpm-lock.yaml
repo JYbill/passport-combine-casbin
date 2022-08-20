@@ -10,6 +10,7 @@ specifiers:
   '@midwayjs/mock': ^3.0.0
   '@midwayjs/passport': '3'
   '@midwayjs/security': ^3.4.9
+  '@midwayjs/validate': '3'
   '@midwayjs/web': ^3.0.0
   '@prisma/client': ^3.4.0
   '@types/jest': ^26.0.10
@@ -34,6 +35,7 @@ dependencies:
   '@midwayjs/jwt': 3.4.9
   '@midwayjs/passport': 3.4.9
   '@midwayjs/security': 3.4.9
+  '@midwayjs/validate': 3.4.11
   '@midwayjs/web': 3.4.9_@midwayjs+decorator@3.4.4
   '@prisma/client': 3.15.2_prisma@3.15.2
   casbin: 5.14.0-beta.4
@@ -443,6 +445,16 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@hapi/hoek/9.3.0:
+    resolution: {integrity: sha512-/c6rf4UJlmHlC9b5BaNvzAcFv7HZ2QHaV0D4/HNlBdvFnvQq8RI4kYdhyPCl7Xj+oWvTWQ8ujhqS53LIgAe6KQ==}
+    dev: false
+
+  /@hapi/topo/5.1.0:
+    resolution: {integrity: sha512-foQZKJig7Ob0BMAYBfcJk8d77QtOe7Wo4ox7ff1lQYoNNAb6jwcY1ncdoy2e9wQZzvNy7ODZCYJkK8kzmcAnAg==}
+    dependencies:
+      '@hapi/hoek': 9.3.0
+    dev: false
 
   /@humanwhocodes/config-array/0.5.0:
     resolution: {integrity: sha512-FagtKFz74XrTl7y6HCzQpwDfXP0yhxe9lHLD1UZxjvZIcbyRz8zTFF/yYNfSfzU414eDwZ1SrO0Qvtyf+wFMQg==}
@@ -963,6 +975,13 @@ packages:
       picomatch: 2.3.1
     dev: false
 
+  /@midwayjs/i18n/3.4.11:
+    resolution: {integrity: sha512-0udA6fLYkYUax0uP91GxgeBrIQ3CzToLqN/S+5GhTczOwaY+9SsLL5vVWJckMjWHpgNVc5fnlu8QQkrCGSZGEg==}
+    engines: {node: '>=12'}
+    dependencies:
+      picomatch: 2.3.1
+    dev: false
+
   /@midwayjs/jwt/3.4.9:
     resolution: {integrity: sha512-h0mOb49Wzuner4if8lemz2SvZh2Qq68EfVxkDavpE6rHUiPnjaOqIBEZnavbQFYEZojfIPgU1rzU0zd/ne2ECg==}
     dependencies:
@@ -1048,6 +1067,14 @@ packages:
       mkdirp: 0.5.6
     dev: true
 
+  /@midwayjs/validate/3.4.11:
+    resolution: {integrity: sha512-PJHtJGKgkChAHXOenHV3SVR61igdWAunsVnqNySsfgx3ap4xWQcBCH77nonrCdCfnkZSAtxsSe+tpYLsh83Ngw==}
+    engines: {node: '>=12'}
+    dependencies:
+      '@midwayjs/i18n': 3.4.11
+      joi: 17.6.0
+    dev: false
+
   /@midwayjs/web/3.4.9_@midwayjs+decorator@3.4.4:
     resolution: {integrity: sha512-8C/EOkrZZxMH00y2QV8pLxL78ssR/gI1wM5HDANZaCF13OdznkNySNB1rJAG9oFEEx4xAJmOCh2LiLDAcSTsdA==}
     engines: {node: '>=12'}
@@ -1116,6 +1143,20 @@ packages:
     resolution: {integrity: sha512-NHlojO1DFTsSi3FtEleL9QWXeSF/UjhCW0fgpi7bumnNZ4wj/eQ+BJJ5n2pgoOliTOGv9nX2qXvmHap7rJMNmg==}
     requiresBuild: true
     dev: true
+
+  /@sideway/address/4.1.4:
+    resolution: {integrity: sha512-7vwq+rOHVWjyXxVlR76Agnvhy8I9rpzjosTESvmhNeXOXdZZB15Fl+TI9x1SiHZH5Jv2wTGduSxFDIaq0m3DUw==}
+    dependencies:
+      '@hapi/hoek': 9.3.0
+    dev: false
+
+  /@sideway/formula/3.0.0:
+    resolution: {integrity: sha512-vHe7wZ4NOXVfkoRb8T5otiENVlT7a3IAiw7H5M2+GO+9CDgcVUUsX1zalAztCmwyOr2RUTGJdgB+ZvSVqmdHmg==}
+    dev: false
+
+  /@sideway/pinpoint/2.0.0:
+    resolution: {integrity: sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==}
+    dev: false
 
   /@sindresorhus/is/0.14.0:
     resolution: {integrity: sha512-9NET910DNaIPngYnLLPeg+Ogzqsi9uM4mSboU5y6p8S5DzMTVEsJZrawi+BoDNUVBa2DhJqQYUFvMDfgU062LQ==}
@@ -5196,6 +5237,16 @@ packages:
       - ts-node
       - utf-8-validate
     dev: true
+
+  /joi/17.6.0:
+    resolution: {integrity: sha512-OX5dG6DTbcr/kbMFj0KGYxuew69HPcAE3K/sZpEV2nP6e/j/C0HV+HNiBPCASxdx5T7DMoa0s8UeHWMnb6n2zw==}
+    dependencies:
+      '@hapi/hoek': 9.3.0
+      '@hapi/topo': 5.1.0
+      '@sideway/address': 4.1.4
+      '@sideway/formula': 3.0.0
+      '@sideway/pinpoint': 2.0.0
+    dev: false
 
   /js-tokens/4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}

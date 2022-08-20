@@ -10,6 +10,7 @@
     "@midwayjs/jwt": "^3.4.9",
     "@midwayjs/passport": "3",
     "@midwayjs/security": "^3.4.9",
+    "@midwayjs/validate": "3",
     "@midwayjs/web": "^3.0.0",
     "@prisma/client": "^3.4.0",
     "casbin": "5.14.0-beta.4",

@@ -2,49 +2,44 @@ import { Context } from 'egg';
 /**
  * @file: casbin.middleware.ts
  * @author: xiaoqinvar
- * @desc：casbin 鉴权中间件
+ * @desc：casbin 鉴权中间件 RBAC + ABAC
  * @date: 2022-08-12 14:24:41
  */
-import {
-  HttpStatus,
-  IMiddleware,
-  MidwayHttpError,
-  NextFunction,
-} from '@midwayjs/core';
+import { HttpStatus, IMiddleware, MidwayHttpError, NextFunction, ILogger } from '@midwayjs/core';
 import { Config, Inject, Middleware } from '@midwayjs/decorator';
-import { Casbin } from '../ioc/casbin';
+import { EnforceContext, Enforcer } from 'casbin';
 
 @Middleware()
 export class CasbinMiddleware implements IMiddleware<Context, NextFunction> {
+  @Inject('enforcer')
+  private enforcer: Enforcer;
+
   @Inject()
-  private casbin: Casbin;
+  logger: ILogger;
 
   @Config('middlewareWhiteList')
   ignoreWhiteList: string[];
 
   resolve() {
     return async (ctx: Context, next: NextFunction) => {
-      // init
-      const enforcer = this.casbin.getEnforcer();
-      // uri：/v1/xxx
-      // const path = ctx.path;
-      // jwt
-      // const user = ctx.state.user;
-      // const logger = ctx.getLogger();
-
       // 整理参数
-      const subject = '';
-      const object = '/error';
-      const effect = ctx;
+      const subject = ctx.state.user;
+      const object = ctx.path;
+      const effect = ctx.method;
+      // this.logger.info(subject);
+      // this.logger.info(object);
+      // this.logger.info(effect);
 
-      // 鉴权操作
-      const auth = await enforcer.enforce(subject, object, effect);
-      if (!auth) {
-        // 无权限
-        throw new MidwayHttpError(
-          '🚪 当前用户无权限访问',
-          HttpStatus.FORBIDDEN
-        );
+      // 鉴权操作RBAC
+      const auth1 = await this.enforcer.enforce(subject, object, effect);
+
+      // 鉴权操作ABAC
+      const enforceContext = new EnforceContext('r2', 'p2', 'e2', 'm2');
+      const auth2 = await this.enforcer.enforce(enforceContext, subject, object, effect);
+
+      // 无权限
+      if (!auth1 || !auth2) {
+        throw new MidwayHttpError('🚪 当前用户无权限访问', HttpStatus.FORBIDDEN);
       }
       const result = await next();
       return result;

@@ -19,3 +19,9 @@ model CasbinRule {
 
   @@map("casbin_rule")
 }
+
+model User {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  username String
+  password String
+}

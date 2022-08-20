@@ -4,9 +4,7 @@ import { ScopeEnum } from '@midwayjs/decorator';
 
 export async function dynamicPrismaClientHandler(container: IMidwayContainer) {
   try {
-    const prismaClient: PrismaClientServiceFactory = await container.getAsync(
-      'prismaClientServiceFactory'
-    );
+    const prismaClient: PrismaClientServiceFactory = await container.getAsync('prismaClientServiceFactory');
     return prismaClient.get();
   } catch (error) {
     console.log(error);

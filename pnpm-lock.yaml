@@ -13,12 +13,14 @@ specifiers:
   '@midwayjs/validate': '3'
   '@midwayjs/web': ^3.0.0
   '@prisma/client': ^3.4.0
+  '@types/crypto-js': ^4.1.1
   '@types/jest': ^26.0.10
   '@types/node': '14'
   '@types/passport-jwt': ^3.0.6
   casbin: 5.14.0-beta.4
   casbin-prisma-adapter: ^1.1.3
   cross-env: ^6.0.0
+  crypto-js: ^4.1.1
   egg: ^2.0.0
   egg-mock: ^3.26.0
   jest: ^26.4.0
@@ -40,6 +42,7 @@ dependencies:
   '@prisma/client': 3.15.2_prisma@3.15.2
   casbin: 5.14.0-beta.4
   casbin-prisma-adapter: 1.1.3_52414ee953351779f524e415611bca37
+  crypto-js: 4.1.1
   egg: 2.36.0
   passport-jwt: 4.0.0
 
@@ -47,6 +50,7 @@ devDependencies:
   '@midwayjs/cli': 1.3.11_bc0242c17e1c16c5355085759b793f48
   '@midwayjs/egg-ts-helper': 1.2.1
   '@midwayjs/mock': 3.4.9
+  '@types/crypto-js': 4.1.1
   '@types/jest': 26.0.24
   '@types/node': 14.18.23
   '@types/passport-jwt': 3.0.6
@@ -1264,6 +1268,10 @@ packages:
       '@types/keygrip': 1.0.2
       '@types/node': 14.18.23
     dev: false
+
+  /@types/crypto-js/4.1.1:
+    resolution: {integrity: sha512-BG7fQKZ689HIoc5h+6D2Dgq1fABRa0RbBWKBd9SP/MVRVXROflpm5fhwyATX5duFmbStzyzyycPB8qUYKDH3NA==}
+    dev: true
 
   /@types/depd/1.1.32:
     resolution: {integrity: sha512-kB2cpXs3A0TGWl4a4h74yIwvclYZUTW6Irpee/3Dc1s4Cr5rGPHtpGPpBBpEV1MaKH5z/oul+57oDkEkeRXRnw==}
@@ -2553,6 +2561,10 @@ packages:
       shebang-command: 2.0.0
       which: 2.0.2
     dev: true
+
+  /crypto-js/4.1.1:
+    resolution: {integrity: sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw==}
+    dev: false
 
   /crypto-random-string/2.0.0:
     resolution: {integrity: sha512-v1plID3y9r/lPhviJ1wrXpLeyUIGAZ2SHNYTEapm7/8A9nLPoyvVp3RK/EPFqn5kEznyWgYZNsRtYYIWbuG8KA==}

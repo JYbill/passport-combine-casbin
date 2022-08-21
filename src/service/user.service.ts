@@ -1,9 +1,10 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { Inject, Provide } from '@midwayjs/decorator';
 import { TUser } from '../type';
-import UserVo from '../vo/user.vo';
+import { UserVo, UserVoUsername } from '../vo/user.vo';
 import { CasbinService } from './casbin.service';
 import { BadGatewayError } from '@midwayjs/core/dist/error/http';
+import BaseService from './base.service';
 
 /**
  * @file: user.service.ts
@@ -12,21 +13,24 @@ import { BadGatewayError } from '@midwayjs/core/dist/error/http';
  * @date: 2022-08-12 16:12:32
  */
 @Provide()
-export class UserService {
-  @Inject('prismaClient')
-  prismaClient: PrismaClient;
-
+export class UserService extends BaseService<TUser> {
   @Inject()
   casbinService: CasbinService;
+
+  model = 'user';
 
   /**
    * 根据名称确定用户
    * @param param0
    */
-  async findUserByUsername({ username }: UserVo) {
-    return this.prismaClient.user.findFirst({
+  async findUserByUsername({ username }: UserVoUsername) {
+    return this.findOne({
       where: {
         username,
+      },
+      select: {
+        username: true,
+        salt: true,
       },
     });
   }
@@ -37,13 +41,28 @@ export class UserService {
    * @returns
    */
   async saveUser(user: UserVo) {
-    const userRet = await this.prismaClient.user.create({
-      data: user,
-    });
+    const userRet = await this.create({ data: user });
     const addRoleRet = this.casbinService.addRoleForUser(user.username);
     if (!addRoleRet) {
       throw new BadGatewayError('为注册用户初始化角色失败');
     }
     return userRet;
+  }
+
+  /**
+   * 根据用户名和密码校验用户
+   * @param user
+   */
+  findUserByUsernameAndPassword(user: UserVo) {
+    return this.findOne({
+      where: {
+        username: user.username,
+        password: user.password,
+      },
+      select: {
+        username: true,
+        salt: true,
+      },
+    });
   }
 }

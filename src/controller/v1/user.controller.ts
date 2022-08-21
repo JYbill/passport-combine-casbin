@@ -11,7 +11,8 @@ import { ILogger } from '@midwayjs/core';
 import { Context } from 'egg';
 import { BadRequestError } from '@midwayjs/core/dist/error/http';
 import { Validate } from '@midwayjs/validate';
-import UserVo from '../../vo/user.vo';
+import { UserVo, UserVoUsername } from '../../vo/user.vo';
+import CryptoJS = require('crypto-js');
 
 @Controller('/v1/user')
 export class UserController {
@@ -41,12 +42,12 @@ export class UserController {
    * @returns
    */
   @Post('/login')
-  async login() {
-    return await this.jwt.sign({
-      username: 'xiaoqinvar',
-      age: 22,
-      job: 'nodejs stack engineer',
-    });
+  async login(@Body() user: UserVo) {
+    const userRet = await this.userService.findUserByUsernameAndPassword(user);
+    if (!userRet) {
+      throw new BadRequestError('账号或密码错误');
+    }
+    return this.jwt.sign(user);
   }
 
   /**
@@ -73,7 +74,7 @@ export class UserController {
    */
   @Get('/checkUsername')
   @Validate()
-  async checkUsername(@Query() user: UserVo) {
+  async checkUsername(@Query() user: UserVoUsername) {
     return this.checkSameUsername(user);
   }
 
@@ -83,9 +84,9 @@ export class UserController {
    * @param user
    * @returns
    */
-  async checkSameUsername(user: UserVo) {
+  async checkSameUsername(user: UserVoUsername) {
     const userRet = await this.userService.findUserByUsername(user);
-    // this.logger.info(userRet);
+    this.logger.info(userRet);
     if (!userRet) {
       return '未同名';
     }

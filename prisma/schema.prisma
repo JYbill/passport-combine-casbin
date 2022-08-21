@@ -24,4 +24,5 @@ model User {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   username String
   password String
+  salt     String // 信息摘要加密盐
 }

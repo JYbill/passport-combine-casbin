@@ -35,7 +35,7 @@ export class CasbinFactory {
     
     [matchers]
     #RABC
-    m = g(r.sub.username, p.sub) && g2(r.obj, p.obj) && r.obj == p.obj && r.act == p.act || r.sub.role == 'root'
+    m = g(r.sub.username, p.sub) && g2(r.obj, p.obj) && r.act == p.act || r.sub.role == 'root'
     #ABAC
     m2 = eval(p2.sub_rule) && r2.obj == p2.obj && r2.act == p2.act && p2.eft == 'allow'
     `);

@@ -33,7 +33,7 @@ export default abstract class BaseService<T> {
     (data.select as FieldSelectable<any, boolean>).id = true;
 
     // 特定表/集合中不要返回的字段
-    if (this.model === 'user') {
+    if (this.model === 'user' && (data.select as FieldSelectable<UserVo, boolean>).password === undefined) {
       (data.select as FieldSelectable<UserVo, boolean>).password = false;
     }
     return this.prismaClient[this.model].findFirst(data);

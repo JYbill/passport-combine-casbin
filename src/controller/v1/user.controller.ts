@@ -20,9 +20,6 @@ export class UserController {
   ctx: Context;
 
   @Inject()
-  jwt: JwtService;
-
-  @Inject()
   userService: UserService;
 
   @Logger()
@@ -34,7 +31,7 @@ export class UserController {
    */
   @Post('/verify')
   async jwtPassport() {
-    return this.ctx.state;
+    return this.ctx.state.user;
   }
 
   /**
@@ -43,11 +40,8 @@ export class UserController {
    */
   @Post('/login')
   async login(@Body() user: UserVo) {
-    const userRet = await this.userService.findUserByUsernameAndPassword(user);
-    if (!userRet) {
-      throw new BadRequestError('账号或密码错误');
-    }
-    return this.jwt.sign(user);
+    const token = await this.userService.login(user);
+    return token;
   }
 
   /**

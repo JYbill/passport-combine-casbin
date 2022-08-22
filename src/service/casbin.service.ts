@@ -46,6 +46,6 @@ export class CasbinService {
    * @returns
    */
   async addRoleForUser(username: string) {
-    return this.enforcer.addNamedGroupingPolicy('p', username, Role.MANAGER);
+    return this.enforcer.addNamedGroupingPolicy('g', username, Role.MANAGER);
   }
 }

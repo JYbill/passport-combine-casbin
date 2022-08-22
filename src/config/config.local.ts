@@ -17,6 +17,6 @@ export default {
   middlewareWhiteList: ['/v1/user/login', '/v1/user/register', '/v1/user/checkUsername'],
   jwt: {
     secret: 'xiaoqinvar`s security key.',
-    expiresIn: '2d', // https://github.com/vercel/ms
+    expiresIn: '2 days', // https://github.com/vercel/ms
   },
 } as MidwayConfig & DefaultConfig;

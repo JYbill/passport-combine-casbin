@@ -1,11 +1,12 @@
+import { JwtService } from '@midwayjs/jwt';
 import { Prisma, PrismaClient } from '@prisma/client';
-import { Inject, Provide } from '@midwayjs/decorator';
+import { Config, Inject, Provide } from '@midwayjs/decorator';
 import { TUser } from '../type';
 import { UserVo, UserVoUsername } from '../vo/user.vo';
 import { CasbinService } from './casbin.service';
-import { BadGatewayError } from '@midwayjs/core/dist/error/http';
+import { BadGatewayError, BadRequestError } from '@midwayjs/core/dist/error/http';
 import BaseService from './base.service';
-
+import * as CryptoJS from 'crypto-js';
 /**
  * @file: user.service.ts
  * @author: xiaoqinvar
@@ -13,9 +14,15 @@ import BaseService from './base.service';
  * @date: 2022-08-12 16:12:32
  */
 @Provide()
-export class UserService extends BaseService<TUser> {
+export class UserService extends BaseService<UserVo> {
   @Inject()
   casbinService: CasbinService;
+
+  @Inject()
+  jwt: JwtService;
+
+  @Config('jwt')
+  jwtConfig;
 
   model = 'user';
 
@@ -36,11 +43,15 @@ export class UserService extends BaseService<TUser> {
   }
 
   /**
-   * 保存用户(注册) 并初始化角色
+   * 加盐进行摘要后，保存用户(注册) 并初始化角色
    * @param user
    * @returns
    */
   async saveUser(user: UserVo) {
+    // 二次摘要
+    this.encrypt(user);
+
+    // 存储进集合
     const userRet = await this.create({ data: user });
     const addRoleRet = this.casbinService.addRoleForUser(user.username);
     if (!addRoleRet) {
@@ -53,16 +64,50 @@ export class UserService extends BaseService<TUser> {
    * 根据用户名和密码校验用户
    * @param user
    */
-  findUserByUsernameAndPassword(user: UserVo) {
-    return this.findOne({
+  async login(user: UserVo) {
+    // 获取盐和密码
+    const userRet = await this.findOne({
       where: {
         username: user.username,
-        password: user.password,
       },
       select: {
         username: true,
         salt: true,
+        password: true,
       },
     });
+    if (!userRet) {
+      throw new BadRequestError('账号或密码错误');
+    }
+
+    // 盐字符串 to 盐对象
+    // this.logger.info(userRet);
+    const password = CryptoJS.PBKDF2(user.password, userRet.salt, {
+      keySize: 128 / 32,
+    }).toString();
+    if (!Object.is(password, userRet.password)) {
+      throw new BadRequestError('账号或密码错误');
+    }
+    userRet.password = userRet.salt = undefined;
+    // this.logger.info(userRet);
+    // 默认根据jwt策略里配置的密钥自动设置，不用管密钥
+    const token = this.jwt.signSync(userRet, {
+      expiresIn: this.jwtConfig.expiresIn,
+    });
+    return token;
+  }
+
+  /**
+   * 加盐 + 二次摘要
+   * @param user
+   * @returns
+   */
+  encrypt(user: UserVo) {
+    // 加盐
+    const salt = CryptoJS.lib.WordArray.random(128 / 32).toString();
+    user.salt = salt;
+    // 二次摘要
+    user.password = CryptoJS.PBKDF2(user.password, user.salt).toString();
+    return user;
   }
 }

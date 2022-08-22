@@ -1,4 +1,4 @@
-import { PrismaClientServiceFactory } from './PrismaFactory';
+import { PrismaClientServiceFactory } from './prismaFactory';
 import { IMidwayContainer, providerWrapper } from '@midwayjs/core';
 import { ScopeEnum } from '@midwayjs/decorator';
 

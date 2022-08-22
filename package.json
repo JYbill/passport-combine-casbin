@@ -1,5 +1,5 @@
 {
-  "name": "my-midway-project",
+  "name": "passport-combine-casbin",
   "version": "1.0.0",
   "description": "",
   "private": true,
@@ -58,6 +58,6 @@
     "type": "git",
     "url": ""
   },
-  "author": "",
+  "author": "xiaoqinvar",
   "license": "MIT"
 }

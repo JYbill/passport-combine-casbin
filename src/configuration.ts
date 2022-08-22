@@ -14,6 +14,7 @@ import { ResultMiddleware } from './middleware/result.middleware';
 import * as jwt from '@midwayjs/jwt';
 import * as passport from '@midwayjs/passport';
 import * as validate from '@midwayjs/validate';
+import { ValidateErrorFilter } from './filter/validate.filter';
 
 @Configuration({
   imports: [egg, jwt, passport, validate],
@@ -27,20 +28,14 @@ export class ContainerLifeCycle implements ILifeCycle {
   prismaClient: PrismaClient;
 
   async onReady() {
-    // result -> log -> jwt -> casbin -> request
-    // filter <- result <- log <- jwt <- casbin <- request
+    //           result -> log -> jwt -> casbin -> request
+    // result <- filter <- log <- jwt <- casbin <- request
     this.app.useMiddleware([LogMiddleware, CasbinMiddleware]);
     // jwt认证一定要在casbin授权之前！
-    this.app
-      .getMiddleware()
-      .insertBefore(JwtPassportMiddleware, 'casbin-middleware');
+    this.app.getMiddleware().insertBefore(JwtPassportMiddleware, 'casbin-middleware');
     // 最前面的中间件
     this.app.getMiddleware().insertFirst(ResultMiddleware);
-    this.app.useFilter([
-      DefaultErrorFilter,
-      MidwayHttpErrorFilter,
-      NotFoundFilter,
-    ]);
+    this.app.useFilter([DefaultErrorFilter, MidwayHttpErrorFilter, NotFoundFilter, ValidateErrorFilter]);
   }
 
   async onStop(): Promise<void> {

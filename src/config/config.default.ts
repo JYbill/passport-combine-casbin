@@ -9,7 +9,7 @@ export default (appInfo: MidwayAppInfo) => {
     },
     prismaConfig: {
       default: {
-        log: ['query', 'info', 'warn', 'error'],
+        log: ['info', 'warn', 'error'],
         errorFormat: 'pretty',
       },
       client: {},
@@ -17,13 +17,10 @@ export default (appInfo: MidwayAppInfo) => {
     midwayLogger: {
       clients: {
         middlewareLogger: {
-          fileLogName: 'request.log',
           format: info => {
             const ctx = info.ctx;
             console.log(info);
-            return `${info.timestamp} ${info.LEVEL} ${info.pid} [${
-              Date.now() - ctx.startTime
-            }ms ${ctx.method}] ${info.message}`;
+            return `${info.timestamp} ${info.LEVEL} ${info.pid} [${Date.now() - ctx.startTime}ms ${ctx.method}] ${info.message}`;
           },
         },
       },

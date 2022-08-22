@@ -13,10 +13,17 @@ import { TUser } from './../type';
 export class UserVo implements TUser {
   @Rule(RuleType.string())
   id: string;
+
   @Rule(RuleType.string().min(3).max(10).required())
   username: string;
+
   @Rule(RuleType.string().min(7).max(15).required())
   password: string;
+
+  @Rule(RuleType.string().min(7).max(15).required())
+  nickname: string;
+
+  isAdmin: boolean;
   salt: string; // 后台生成，不需要前端传递
 }
 

@@ -5,25 +5,16 @@
  * @date: 2022-08-12 17:00:15
  */
 import { Body, Controller, Get, Headers, Inject, Logger, Post, Query } from '@midwayjs/decorator';
-import { JwtService } from '@midwayjs/jwt';
 import { UserService } from './../../service/user.service';
-import { ILogger } from '@midwayjs/core';
-import { Context } from 'egg';
 import { BadRequestError } from '@midwayjs/core/dist/error/http';
 import { Validate } from '@midwayjs/validate';
 import { UserVo, UserVoUsername } from '../../vo/user.vo';
-import CryptoJS = require('crypto-js');
+import BaseController from '../base.controller';
 
 @Controller('/v1/user')
-export class UserController {
-  @Inject()
-  ctx: Context;
-
+export class UserController extends BaseController {
   @Inject()
   userService: UserService;
-
-  @Logger()
-  logger: ILogger;
 
   /**
    * 测试：jwt-passport校验中间件

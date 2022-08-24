@@ -39,7 +39,7 @@ export class CasbinMiddleware implements IMiddleware<Context, NextFunction> {
 
       // 无权限
       // this.logger.info(auth1, auth2);
-      if (!auth1 || !auth2) {
+      if (!(auth1 && auth2)) {
         throw new MidwayHttpError('🚪 当前用户无权限访问', HttpStatus.FORBIDDEN);
       }
       const result = await next();

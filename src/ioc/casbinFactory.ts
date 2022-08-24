@@ -3,7 +3,6 @@ import { Application } from 'egg';
 import { App, Config, Init, Logger, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
 import { Enforcer, MemoryAdapter, newEnforcer, newModel, newModelFromString } from 'casbin';
 import { PrismaAdapter } from 'casbin-prisma-adapter';
-import { resolve } from 'path';
 
 @Provide()
 @Scope(ScopeEnum.Singleton)

@@ -24,6 +24,7 @@ export class UserVo implements TUser {
   nickname: string;
 
   isAdmin: boolean;
+
   salt: string; // 后台生成，不需要前端传递
 }
 

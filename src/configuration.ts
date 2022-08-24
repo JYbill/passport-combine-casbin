@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client';
 import { App, Configuration, Inject } from '@midwayjs/decorator';
 import { ILifeCycle } from '@midwayjs/core';
 import { Application } from 'egg';
-import { join } from 'path';
+import { resolve } from 'path';
 import * as egg from '@midwayjs/web';
 import { LogMiddleware } from './middleware/logger.middleware';
 import { DefaultErrorFilter } from './filter/default.filter';
@@ -18,7 +18,7 @@ import { ValidateErrorFilter } from './filter/validate.filter';
 
 @Configuration({
   imports: [egg, jwt, passport, validate],
-  importConfigs: [join(__dirname, './config')],
+  importConfigs: [resolve(__dirname, './config')],
 })
 export class ContainerLifeCycle implements ILifeCycle {
   @App()
@@ -35,6 +35,8 @@ export class ContainerLifeCycle implements ILifeCycle {
     this.app.getMiddleware().insertBefore(JwtPassportMiddleware, 'casbin-middleware');
     // 最前面的中间件
     this.app.getMiddleware().insertFirst(ResultMiddleware);
+
+    // filters
     this.app.useFilter([DefaultErrorFilter, MidwayHttpErrorFilter, NotFoundFilter, ValidateErrorFilter]);
   }
 

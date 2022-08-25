@@ -48,4 +48,13 @@ export class CasbinService {
   async addRoleForUser(username: string) {
     return this.enforcer.addNamedGroupingPolicy('g', username, Role.MANAGER);
   }
+
+  /**
+   * 根据角色名获取所有用户
+   * @returns
+   */
+  async getUsersByRole(roleName: string) {
+    this.logger.info(roleName);
+    return this.enforcer.getImplicitUsersForRole(roleName);
+  }
 }

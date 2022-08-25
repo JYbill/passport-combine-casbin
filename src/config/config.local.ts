@@ -9,14 +9,4 @@ export type DefaultConfig = PowerPartial<EggAppConfig>;
  * 请注意，线上环境依旧会有该错误，需要手动开启
  * 如果想了解更多细节，请访问 https://eggjs.org/zh-cn/core/security.html#安全威胁-csrf-的防范
  */
-export default {
-  // 关闭passport 校验通过后序列化成json，有需要可以改为true，并按照官网重写，注意V8只会给你分配1400M左右的堆内存大小，需要序列化推荐redis
-  passport: {
-    session: false,
-  },
-  middlewareWhiteList: ['/v1/user/login', '/v1/user/register', '/v1/user/checkUsername'],
-  jwt: {
-    secret: 'xiaoqinvar`s security key.',
-    expiresIn: '2 days', // https://github.com/vercel/ms
-  },
-} as MidwayConfig & DefaultConfig;
+export default {} as MidwayConfig & DefaultConfig;

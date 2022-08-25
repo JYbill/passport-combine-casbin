@@ -40,8 +40,13 @@ export class UserController extends BaseController {
    * @returns
    */
   @Post('/register')
-  @Validate()
+  @Validate({
+    validationOptions: {
+      allowUnknown: true,
+    },
+  })
   async register(@Body() user: UserVo) {
+    this.logger.info(user);
     // 先检测同名
     await this.checkSameUsername(user);
     // 再注册
@@ -71,7 +76,7 @@ export class UserController extends BaseController {
    */
   async checkSameUsername(user: UserVoUsername) {
     const userRet = await this.userService.findUserByUsername(user);
-    this.logger.info(userRet);
+    // this.logger.info(userRet);
     if (!userRet) {
       return '未同名';
     }

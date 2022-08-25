@@ -1,6 +1,6 @@
-import { Context } from 'egg';
 import { Config, Middleware } from '@midwayjs/decorator';
 import { PassportMiddleware, AuthenticateOptions } from '@midwayjs/passport';
+import { Context } from '@midwayjs/web';
 import { JwtStrategy } from '../strategy/jwt.strategy';
 
 /**
@@ -12,7 +12,9 @@ export class JwtPassportMiddleware extends PassportMiddleware(JwtStrategy) {
   ignoreWhiteList: string[];
 
   getAuthenticateOptions(): Promise<AuthenticateOptions> | AuthenticateOptions {
-    return {};
+    return {
+      failureMessage: 'json wb token is bad. 🔐 please check token!',
+    };
   }
 
   /**

@@ -31,5 +31,27 @@ export default (appInfo: MidwayAppInfo) => {
         },
       },
     },
+
+    // 关闭passport 校验通过后序列化成json，有需要可以改为true，并按照官网重写，注意V8只会给你分配1400M左右的堆内存大小，需要序列化推荐redis
+    passport: {
+      session: false,
+    },
+
+    // casbin、jwt白名单
+    middlewareWhiteList: ['/v1/user/login', '/v1/user/register', '/v1/user/checkUsername'],
+
+    // redis
+    redis: {
+      clients: {
+        session: { host: '101.35.13.180', port: 6379, password: '990415', db: 0 },
+        cache: { host: '101.35.13.180', port: 6379, password: '990415', db: 1 },
+      },
+    },
+
+    // jwt相关
+    jwt: {
+      secret: 'xiaoqinvar`s security key.',
+      expiresIn: '2 days', // https://github.com/vercel/ms
+    },
   } as MidwayConfig;
 };

@@ -14,7 +14,7 @@ export class ValidateErrorFilter {
     return {
       status: 422,
       success: false,
-      message: err.message,
+      message: `[Validate Error] ${err.message}`,
     };
   }
 }

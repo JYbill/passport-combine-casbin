@@ -1,8 +1,8 @@
-import { ILogger } from '@midwayjs/core';
-import { Application } from 'egg';
-import { App, Config, Init, Logger, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
-import { Enforcer, MemoryAdapter, newEnforcer, newModel, newModelFromString } from 'casbin';
+import { IMidwayLogger } from '@midwayjs/core';
+import { Config, Init, Logger, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
+import { Enforcer, newEnforcer, newModelFromString } from 'casbin';
 import { PrismaAdapter } from 'casbin-prisma-adapter';
+import { RedisWatcher } from '@casbin/redis-watcher';
 
 @Provide()
 @Scope(ScopeEnum.Singleton)
@@ -10,11 +10,15 @@ export class CasbinFactory {
   enforcer: Enforcer;
 
   @Logger()
-  logger: ILogger;
+  logger: IMidwayLogger;
+
+  @Config('redis')
+  redisConfig;
+
+  env = process.env;
 
   @Init()
   public async init(): Promise<void> {
-    const adapter = await PrismaAdapter.newAdapter();
     const model = newModelFromString(`
     [request_definition]
     r = sub, obj, act
@@ -38,16 +42,30 @@ export class CasbinFactory {
     #ABAC
     m2 = eval(p2.sub_rule) && r2.obj == p2.obj && r2.act == p2.act && p2.eft == 'allow'
     `);
+    const adapter = await PrismaAdapter.newAdapter();
     this.enforcer = await newEnforcer(model, adapter);
-    // redis watcher
-    // const watcher = await RedisWatcher.newWatcher(
-    //   this.redisConfig.clients.session
-    // );
-    // this.enforcer.setWatcher(watcher);
 
-    // await e.addPolicy(...);
-    // await e.removePolicy(...);
+    // setting redis watcher.
+    const redisURL = this.env.REDIS_URL;
+    // this.logger.info('redis connection url is');
+    // this.logger.info(redisURL);
+    // this.logger.info(this.redisConfig.clients.cache);
+    // const watcher = await RedisWatcher.newWatcher(this.redisConfig.clients.cache);
+    // this.logger.info(watcher);
+    const watcher = await RedisWatcher.newWatcher('redis://:990415@101.35.13.180:6379');
+    this.enforcer.setWatcher(watcher);
+    // this.enforcer.savePolicy();
 
+    // 用户继承
+    await this.enforcer.addRoleForUser('xiaoqinvar', 'MANAGER');
+
+    // 资源继承
+    await this.enforcer.addNamedGroupingPolicies('g2', [['/v1/casbin/users', 'casbinGetApi']]);
+
+    // 策略p
+    await this.enforcer.addNamedPolicies('p', [['MANAGER', 'casbinGetApi', 'GET']]);
+
+    this.logger.info('casbin is ready.');
     // Save the policy back to DB.
     // await e.savePolicy();
   }

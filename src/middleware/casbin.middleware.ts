@@ -5,7 +5,7 @@ import { Context } from 'egg';
  * @desc：casbin 鉴权中间件 RBAC + ABAC
  * @date: 2022-08-12 14:24:41
  */
-import { HttpStatus, IMiddleware, MidwayHttpError, NextFunction, ILogger } from '@midwayjs/core';
+import { HttpStatus, IMiddleware, MidwayHttpError, NextFunction, ILogger, IMidwayLogger } from '@midwayjs/core';
 import { Config, Inject, Middleware } from '@midwayjs/decorator';
 import { EnforceContext, Enforcer } from 'casbin';
 
@@ -15,7 +15,7 @@ export class CasbinMiddleware implements IMiddleware<Context, NextFunction> {
   private enforcer: Enforcer;
 
   @Inject()
-  logger: ILogger;
+  logger: IMidwayLogger;
 
   @Config('middlewareWhiteList')
   ignoreWhiteList: string[];
@@ -38,7 +38,7 @@ export class CasbinMiddleware implements IMiddleware<Context, NextFunction> {
       const auth2 = await this.enforcer.enforce(enforceContext, subject, object, effect);
 
       // 无权限
-      // this.logger.info(auth1, auth2);
+      this.logger.info(auth1, auth2);
       if (!(auth1 && auth2)) {
         throw new MidwayHttpError('🚪 当前用户无权限访问', HttpStatus.FORBIDDEN);
       }

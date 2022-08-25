@@ -12,6 +12,7 @@ export class ResultMiddleware implements IMiddleware<Context, NextFunction> {
       const result = await next();
       return {
         code: 200,
+        success: true,
         data: result,
         message: '🚀 ok.',
       };

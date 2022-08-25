@@ -32,19 +32,19 @@ model User {
 }
 
 model Role {
-  id         String  @id @default(auto()) @map("_id") @db.ObjectId
-  roleName   String  @unique()
-  descprtion String? // 描述
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  roleName    String  @unique()
+  description String? // 描述
 }
 
 model PermissionGroup {
   id                  String  @id @default(auto()) @map("_id") @db.ObjectId
   permissionGroupName String  @unique()
-  descprtion          String? // 描述
+  description         String? // 描述
 }
 
 model Permission {
   id             String  @id @default(auto()) @map("_id") @db.ObjectId
   permissionName String  @unique() // 接口
-  descprtion     String?
+  description    String?
 }

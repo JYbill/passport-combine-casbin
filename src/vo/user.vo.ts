@@ -20,7 +20,7 @@ export class UserVo implements TUser {
   @Rule(RuleType.string().min(7).max(15).required())
   password: string;
 
-  @Rule(RuleType.string().min(7).max(15).required())
+  @Rule(RuleType.string().min(2).max(10).required())
   nickname: string;
 
   isAdmin: boolean;

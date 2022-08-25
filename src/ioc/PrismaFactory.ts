@@ -1,5 +1,5 @@
-import { ServiceFactory } from '@midwayjs/core';
-import { Config, Init, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
+import { ServiceFactory, ILogger } from '@midwayjs/core';
+import { Config, Init, Logger, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
 import { PrismaClient } from '@prisma/client';
 
 @Provide('prismaClientServiceFactory')
@@ -8,9 +8,24 @@ export class PrismaClientServiceFactory extends ServiceFactory<PrismaClient> {
   @Config('prismaConfig')
   prismaConfig;
 
+  @Logger()
+  logger: ILogger;
+
   @Init()
   async init() {
     await this.initClients(this.prismaConfig);
+    const prismaClient = this.get();
+
+    // 初始化部分表
+
+    // TODO: 查询初始化数据是否存在？不存在 -> 插入
+    // unique会报错
+    // const initRole = await prismaClient.role.createMany({
+    //   data: [
+    //     { roleName: 'MANAGER', description: '管理员角色' },
+    //     { roleName: 'USER', description: '用户角色' },
+    //   ],
+    // });
   }
 
   /**

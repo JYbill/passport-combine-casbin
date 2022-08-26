@@ -23,8 +23,12 @@ export class CasbinMiddleware implements IMiddleware<Context, NextFunction> {
   resolve() {
     return async (ctx: Context, next: NextFunction) => {
       // 整理参数
+      // jwt 认证后的用户对象
       const subject = ctx.state.user;
+      // 请求的资源，即http://localhost:7001/user/info
+      // 这里就是/user/info，底层与koa用法一致 `ctx.path`
       const object = ctx.path;
+      // 这里不用多说就是 GET、...、DELETE请求方法
       const effect = ctx.method;
       // this.logger.info(subject);
       // this.logger.info(object);

@@ -133,6 +133,26 @@ rabbit, /test, POST # true
 > xiaoqinvar 只有`/test`接口下的`GET`行为，所以他只能通过`GET /test`请求
 > rabbit 只有`/test`接口下的`POST`行为，所以只能通过`POST /test`请求
 
+- 可能有些童鞋不懂请求这里，下面用代码片段描述
+
+```ts
+// jwt 认证后的用户对象
+const subject = ctx.state.user;
+// 请求的资源，即http://localhost:7001/test
+// 这里就是/test，底层与koa用法一致 `ctx.path`
+const object = ctx.path;
+// 这里不用多说就是 GET、...、DELETE请求方法
+const effect = ctx.method;
+
+// 鉴权
+// 与上面对应(先大致理解)
+// subject: xiaoqinvar
+// object: /test
+// effect: GET
+// 那么，xiaoqinvar, /test, GET即xiaoqinvar这个用户就允许访问，因为上面的策略文件里面有给予他这个权限
+const auth1 = await this.enforcer.enforce(subject, object, effect);
+```
+
 ## RBAC with resource roles
 
 - ACL 很简单，但是我们企业开发至少是 RBAC 模型(既有用户、用户角色、也有资源、资源组（或者叫资源角色）)

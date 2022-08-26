@@ -1,5 +1,7 @@
 # passport-combine-casbin
 
+> but not only casbin
+
 ## 技术选型
 
 - 基础：Midway.js ✅
@@ -7,6 +9,25 @@
 - DB: mongoDB(需要副本集开启事物) ✅
 - Front: React✅ (有考虑尝试 SSR，可以但没必要，主要是第一次练习用)
 - Cache: redis(后续可能采用做 casbin-watcher 替代内存 watcher) ❌
+
+## 包含技术点
+
+1. midway 基本用法、服务工厂，代码目录文件采用 nest 的规范、规范与细化...(如有不合格、可以改进的地方欢迎指出) ✅
+2. midway 整合 `prisma` ✅
+3. midway 整合 `passport` 配合 `jwt` 策略 ✅
+4. passport 整合 `github OAuth2.0`策略 ⌛️
+5. midway 整合 `casbin` ✅
+6. 使用 `prisma 适配器` 结合 `casbin` ✅
+7. 使用 `redis watcher` 结合 `casbin` ✅
+
+## 期望
+
+- 希望来看的各位看官有以下几点知识储备
+
+1. ACL、RBAC、ABAC 模型的概念(google、百度很多)
+   > RBAC: 这个做后台的基本都懂大白话就是`用户-角色-权限`的模型
+2. 了解 jwt 前后端交互(google、百度巨多)
+   > json web token，知道怎么使用，知道用来干啥的
 
 ## 什么是 Casbin？
 
@@ -54,8 +75,16 @@ m = r.sub == p.sub && r.obj == p.obj && r.act == p.act
 # 这里开始结合policy文件讲比较好
 ```
 
+## Casbin 官方计算器
+
 - 快速开始往往是学习最快的方法：
-  [官方 casbin 计算器](https://casbin.org/editor/)
+  [官方 online casbin 计算器(可能挂了)](https://casbin.org/editor/)
+- 官方计算器源码:
+  [github casbin-editor](https://github.com/casbin/casbin-editor)
+  > 拉下来启动会报错，修改`tsconfig.json`里，添加`"useUnknownInCatchVariables": false`即可成功运行，不过启动很慢大概`30s内`
+
+## ACL
+
 - 选择 ACL 模型：角色名对权限名
 
 ```bash
@@ -92,19 +121,94 @@ rabbit, /test, POST # true
 > xiaoqinvar 只有`/test`接口下的`GET`行为，所以他只能通过`GET /test`请求
 > rabbit 只有`/test`接口下的`POST`行为，所以只能通过`POST /test`请求
 
-- ACL 很简单，但是我们企业开发至少是 RBAC 模型起步
-  > casbin 官网 editor 工具抽了，这里暂时停住
+## RBAC with resource roles
+
+- ACL 很简单，但是我们企业开发至少是 RBAC 模型(既有用户、用户角色、也有资源、资源组（或者叫资源角色）)
 
 ```bash
+[request_definition]
+r = sub, obj, act
 
+[policy_definition]
+p = sub, obj, act
+
+[role_definition]
+g = _, _
+g2 = _, _
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = g(r.sub, p.sub) && g2(r.obj, p.obj) && r.act == p.act
 ```
 
 ```bash
+# 允许管理员访问 /user下的所有方法
+p, MANAGER, userGetApi, GET
+p, MANAGER, userPostApi, POST
+p, MANAGER, userPutApi, PUT
+p, MANAGER, userDeleteApi, DELETE
 
+# 只允许用户访问 /user GET请求
+p, USER, userGetApi, GET
+
+# 用户、用户角色
+g, xiaoqinvar, MANAGER
+g, ant, USER
+
+# /user接口的各GET... DELETE方法，接口 接口角色
+g2, /user, userGetApi
+g2, /user, userPostApi
+g2, /user, userPutApi
+g2, /user, userDeleteApi
 ```
 
 ```bash
+xiaoqinvar, /user, GET # true
+xiaoqinvar, /user, DELETE # true
 
+ant, /user, GET # true, 下面都是false
+ant, /user, POST
+ant, /user, PUT
+ant, /user, DELETE
+```
+
+## RBAC + ABAC
+
+```bash
+[request_definition]
+#   用户名，api，方法
+r = sub, obj, act
+#   用户名，api，方法，允许/拒绝
+r2 = sub, obj, act, eft
+
+[policy_definition]
+p = sub, obj, act
+# ABAC就不一样了，这里策略的sub_rule相当于一段判断条件表达式，就这一个区别，可以看看策略文件
+# obj,...,eft 与之前的一致
+p2= sub_rule, obj, act, eft
+
+[role_definition]
+# 用户继承(g, xiaoqinvar, MANAGER) -> xiaoqinvar 拥有 MANAGER角色
+g = _, _
+# 资源集成(g2, /user/info, testApiGet) -> /user/info 属于 testApiGet资源组
+g2 = _, _
+
+[policy_effect]
+# e 默认条件 -> 只要有一个条件满足了就通过
+e = some(where (p.eft == allow))
+# e2 自定义条件 -> 只要没有否定条件就通过，也就是说e2条件下，在策略文件中没有写任何策略，也判定为通过，因为！没有deny策略即通过！
+e2 = !some(where (p.eft == deny))
+
+[matchers]
+#RABC
+# 这里我请求是个对象
+# 请求对象中的username要和策略文件中的一致
+# 如果请求对象中的role角色为'root'则不用查策略文件，全部通过
+m = g(r.sub.username, p.sub) && g2(r.obj, p.obj) && r.act == p.act || r.sub.role == 'root'
+#ABAC
+m2 = eval(p2.sub_rule) && r2.obj == p2.obj && r2.act == p2.act && p2.eft == 'allow' || r.sub.role == 'root'
 ```
 
 > 推荐参考文档:

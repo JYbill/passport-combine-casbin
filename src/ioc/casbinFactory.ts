@@ -22,7 +22,7 @@ export class CasbinFactory {
     const model = newModelFromString(`
     [request_definition]
     r = sub, obj, act
-    r2 = sub, obj, act
+    r2 = sub, obj, act, eft
     
     [policy_definition]
     p = sub, obj, act

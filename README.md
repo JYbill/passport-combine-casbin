@@ -33,6 +33,31 @@
 
 如果有什么不太理解的完全可以提个 issue！
 
+## 运行
+
+项目根目录创建一个`.env`文件
+
+```bash
+# 账号密码
+USERNAME=mongodb账号
+PASSWORD=mongodb密码
+
+# url
+URL=你的域名
+
+# db
+DB=db里的库
+
+# db url
+DATABASE_URL=mongodb://${USERNAME}:${PASSWORD}@${URL}:27017,${URL}:27018,${URL}:27019/${DB}?replicaSet=rs0&authSource=admin
+
+# redis url
+REDIS_USERNAME=redis用户名
+REDIS_PASSWORD=redis密码
+REDIS_IP=你的ip:端口
+REDIS_URL=redis://:${REDIS_PASSWORD}@${REDIS_IP}/0
+```
+
 ## 什么是 Casbin？
 
 - 它能做什么?不能做什么?

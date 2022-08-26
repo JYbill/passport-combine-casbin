@@ -45,7 +45,11 @@
 
 ## 项目中 casbin 触发流程
 
-[drawing...画画中...]()
+- 项目初始化
+  ![](./doc/img/project%20init.png)
+- 请求中间件流程
+  ![](./doc/img/request%20process.png)
+  > 一定要注意，casbin 中间件一定得放在 jwt 后面，jwt、casbin 认证，鉴权能力形成互补关系[configuration.ts](./src/configuration.ts)(代码里的注释很详细)
 
 ## model.conf 分析
 

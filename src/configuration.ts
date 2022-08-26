@@ -36,7 +36,7 @@ export class ContainerLifeCycle implements ILifeCycle {
     this.app.useMiddleware([LogMiddleware, CasbinMiddleware]);
     // jwt认证一定要在casbin授权之前！
     this.app.getMiddleware().insertBefore(JwtPassportMiddleware, 'casbin-middleware');
-    // 最前面的中间件
+    // 返回数据一致化的中间件
     this.app.getMiddleware().insertFirst(ResultMiddleware);
 
     // filters

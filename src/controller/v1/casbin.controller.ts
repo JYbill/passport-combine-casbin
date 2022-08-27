@@ -27,11 +27,19 @@ export class CasbinController extends BaseController {
 
   /**
    * 当你直接修改数据库casbin_rule的数据后，你可能需要load一下策略
+   * 默认是不需要执行jwt、casbin中间件，有需要自己配置策略并在default.config文件中删除白名单接口
    * @returns
    */
   @Get('/update')
-  async testWatcher() {
+  async update() {
     await this.enforcer.loadPolicy();
     return 'casbin was updated.';
+  }
+
+  @Get('/testWatcher')
+  async testWatcher() {
+    const addRet = await this.enforcer.addRoleForUser('癞蛤蟆', 'WATCHER');
+    const delRet = await this.enforcer.deleteRoleForUser('癞蛤蟆', 'WATCHER');
+    return [addRet, delRet];
   }
 }

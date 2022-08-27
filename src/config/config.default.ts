@@ -38,7 +38,7 @@ export default (appInfo: MidwayAppInfo) => {
     },
 
     // casbin、jwt白名单
-    middlewareWhiteList: ['/v1/user/login', '/v1/user/register', '/v1/user/checkUsername', '/v1/casbin/update'],
+    middlewareWhiteList: ['/v1/user/login', '/v1/user/register', '/v1/user/checkUsername', '/v1/casbin/update', '/v1/casbin/testWatcher'],
 
     // redis
     redis: {

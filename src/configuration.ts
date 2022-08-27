@@ -16,11 +16,10 @@ import * as passport from '@midwayjs/passport';
 import * as validate from '@midwayjs/validate';
 import { ValidateErrorFilter } from './filter/validate.filter';
 import * as dotenv from 'dotenv';
-import * as redis from '@midwayjs/redis';
 
 dotenv.config();
 @Configuration({
-  imports: [egg, jwt, passport, validate, redis],
+  imports: [egg, jwt, passport, validate],
   importConfigs: [resolve(__dirname, './config')],
 })
 export class ContainerLifeCycle implements ILifeCycle {

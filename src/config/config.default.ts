@@ -7,7 +7,7 @@ export default (appInfo: MidwayAppInfo) => {
 
     // egg config
     egg: {
-      port: 7003,
+      port: 7004,
     },
 
     // prisma config
@@ -38,7 +38,7 @@ export default (appInfo: MidwayAppInfo) => {
     },
 
     // casbin、jwt白名单
-    middlewareWhiteList: ['/v1/user/login', '/v1/user/register', '/v1/user/checkUsername'],
+    middlewareWhiteList: ['/v1/user/login', '/v1/user/register', '/v1/user/checkUsername', '/v1/casbin/update'],
 
     // redis
     redis: {

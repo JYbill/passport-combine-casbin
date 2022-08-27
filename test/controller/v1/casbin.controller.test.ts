@@ -36,4 +36,10 @@ describe('test/controller/v1/user.controller.test.ts', () => {
     expect(verifyRes.status).toBe(200);
     expect(verifyRes.body.success).toBe(true);
   });
+
+  it('should GET /v1/casbin/update', async () => {
+    const verifyRes = await createHttpRequest(app).get('/v1/casbin/update');
+    expect(verifyRes.status).toBe(200);
+    expect(verifyRes.body.success).toBe(true);
+  });
 });

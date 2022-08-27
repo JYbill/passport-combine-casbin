@@ -5,6 +5,49 @@ import * as assert from 'assert';
 import { join } from 'path';
 import { IMidwayBaseApplication } from '@midwayjs/core';
 
+/**
+ * 注册
+ */
+export const registerFunc = async app => {
+  await createHttpRequest(app).post('/v1/user/register').send({
+    username: 'MR-frog',
+    password: 'frog-password',
+    nickname: '土壳🐎',
+  });
+  // expect(verifyRes.status).toBe(200);
+  // expect(verifyRes.body.success).toBe(true);
+};
+
+/**
+ * 登陆
+ * @returns token
+ */
+const loginFunc = async app => {
+  const loginRet = await createHttpRequest(app).post('/v1/user/login').send({
+    username: 'MR-frog',
+    password: 'frog-password',
+  });
+  // expect(loginRet.status).toBe(200);
+  // expect(loginRet.body.success).toBe(true);
+  return {
+    success: loginRet.body.success,
+    token: 'Bearer ' + loginRet.body.data,
+  };
+};
+
+/**
+ * 登陆失败 to 注册再登陆
+ * @returns token
+ */
+export const loginIsBad2RegisterFunc = async app => {
+  const { token, success } = await loginFunc(app);
+  if (!success) {
+    await registerFunc(app);
+    return loginIsBad2RegisterFunc(app);
+  }
+  return token;
+};
+
 describe('test/controller/v1/user.controller.test.ts', () => {
   let app: IMidwayBaseApplication<any>;
   let token: string;
@@ -12,6 +55,7 @@ describe('test/controller/v1/user.controller.test.ts', () => {
   beforeAll(async () => {
     // create app
     app = await createApp<Framework>();
+    token = await loginIsBad2RegisterFunc(app);
   });
 
   afterAll(async () => {
@@ -25,26 +69,8 @@ describe('test/controller/v1/user.controller.test.ts', () => {
     expect(res.body.success).toBe(true);
   });
 
-  // 注册
-  it('should POST /v1/user/register', async () => {
-    const res = await createHttpRequest(app).post('/v1/user/register').send({
-      username: 'MR-frog',
-      password: 'frog-password',
-      nickname: '土壳马',
-    });
-    expect(res.status).toBe(200);
-    expect(res.body.success).toBe(true);
-  });
-
   // 登陆 -> 校验token
-  it('should POST /v1/user/login and /v1/user/verify', async () => {
-    const loginRet = await createHttpRequest(app).post('/v1/user/login').send({
-      // username: 'MR-frog',
-      // password: 'frog-password',
-      username: 'xiaoqinvar',
-      password: '1234567890',
-    });
-    token = 'Bearer ' + loginRet.body.data;
+  it('should POST /v1/user/verify', async () => {
     const res = await createHttpRequest(app).post('/v1/user/verify').set({
       authorization: token,
     });

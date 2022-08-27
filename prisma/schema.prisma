@@ -23,28 +23,44 @@ model CasbinRule {
 // 查询直接根据casbin查，不用逻辑外键查
 // 加唯一即可
 model User {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  username String  @unique()
-  nickname String // 昵称
-  password String
-  salt     String // 信息摘要加密盐
-  isAdmin  Boolean @default(false) // 是否是管理员，作用于casbin的超级管理员权限
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  username     String   @unique()
+  nickname     String // 昵称
+  password     String
+  salt         String // 信息摘要加密盐
+  gmt_create   DateTime @default(now())
+  gmt_modified DateTime @default(now()) @updatedAt
+  isAdmin      Boolean  @default(false) // 是否是管理员，作用于casbin的超级管理员权限
+
+  @@map("users")
 }
 
 model Role {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  roleName    String  @unique()
-  description String? // 描述
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  roleName     String   @unique()
+  description  String? // 描述
+  gmt_create   DateTime @default(now())
+  gmt_modified DateTime @default(now()) @updatedAt
+
+  @@map("roles")
 }
 
 model PermissionGroup {
-  id                  String  @id @default(auto()) @map("_id") @db.ObjectId
-  permissionGroupName String  @unique()
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  permissionGroupName String   @unique()
   description         String? // 描述
+  gmt_create          DateTime @default(now())
+  gmt_modified        DateTime @default(now()) @updatedAt
+
+  @@map("permission_groups")
 }
 
 model Permission {
-  id             String  @id @default(auto()) @map("_id") @db.ObjectId
-  permissionName String  @unique() // 接口
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  permissionName String   @unique() // 接口
   description    String?
+  gmt_create     DateTime @default(now())
+  gmt_modified   DateTime @default(now()) @updatedAt
+
+  @@map("permissions")
 }

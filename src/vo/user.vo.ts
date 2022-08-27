@@ -26,6 +26,10 @@ export class UserVo implements TUser {
   isAdmin: boolean;
 
   salt: string; // 后台生成，不需要前端传递
+
+  gmt_create: Date;
+
+  gmt_modified: Date;
 }
 
 /**

@@ -4,6 +4,7 @@ import { Application } from 'egg';
 import * as assert from 'assert';
 import { join } from 'path';
 import { IMidwayBaseApplication } from '@midwayjs/core';
+import { loginIsBad2RegisterFunc } from './user.controller.test';
 
 describe('test/controller/v1/user.controller.test.ts', () => {
   let app: IMidwayBaseApplication<any>;
@@ -12,11 +13,7 @@ describe('test/controller/v1/user.controller.test.ts', () => {
   beforeAll(async () => {
     // create app
     app = await createApp<Framework>();
-    const loginRet = await createHttpRequest(app).post('/v1/user/login').send({
-      username: 'MR-frog',
-      password: 'frog-password',
-    });
-    token = 'Bearer ' + loginRet.body.data;
+    token = await loginIsBad2RegisterFunc(app);
   });
 
   afterAll(async () => {
@@ -37,8 +34,16 @@ describe('test/controller/v1/user.controller.test.ts', () => {
     expect(verifyRes.body.success).toBe(true);
   });
 
+  // 更新策略
   it('should GET /v1/casbin/update', async () => {
     const verifyRes = await createHttpRequest(app).get('/v1/casbin/update');
+    expect(verifyRes.status).toBe(200);
+    expect(verifyRes.body.success).toBe(true);
+  });
+
+  // 测试redis watcher
+  it('should GET /v1/casbin/testWatcher', async () => {
+    const verifyRes = await createHttpRequest(app).get('/v1/casbin/testWatcher');
     expect(verifyRes.status).toBe(200);
     expect(verifyRes.body.success).toBe(true);
   });

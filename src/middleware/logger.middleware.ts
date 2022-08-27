@@ -13,12 +13,12 @@ export class LogMiddleware implements IMiddleware<Context, NextFunction> {
 
       // 打印参数信息
       let logInfo;
-      if (ctx.method === 'GET') {
+      if (ctx.method === 'GET' && Object.keys(ctx.query).length >= 1) {
         logInfo = { query: ctx.query };
-      } else {
+      } else if (Object.keys(ctx.request.body).length >= 1) {
         logInfo = { body: ctx.request.body };
       }
-      logger.info(logInfo);
+      logger.info(logInfo ? logInfo : '');
       const result = await next();
       return result;
     };

@@ -136,8 +136,38 @@ export class RedisWatcher implements Watcher {
 
 - 其实代码还是很简单的，如果需要定制 redis watcher 的功能，我们也完全可以在源码上进行修改，如果你想给`casbin redis watcher`增加拓展功能，完全可以给他们提 PR
 
+## 实践
+
 - 实践，我说了怎么多，万一是骗你们的怎么办？
 
 1. 下载项目
 2. pnpm build -> pnpm start (端口 7101)
 3. pnpm dev (7003)
+4. midway 默认第一次访问会初始化 Single 作用域的实例(对象)，所以先请求一次`GET /v1/casbin/update`在`7003`和`7101`两个端口的项目里。
+5. 会得到如下的打印
+
+```ts
+// midway 7003 (pnpm dev)
+2022-08-27 16:49:32,169 WARN 44275 casbin is ready.
+2022-08-27 16:49:32,173 INFO 44275 [-/127.0.0.1/-/481ms GET /v1/casbin/update] { query: {} }
+
+// midway 7101 (pnpm build -> pnpm start)
+2022-08-27 16:49:41,104 WARN 44280 casbin is ready.
+```
+
+> 此时 casbin 策略都在内存里了 6. 访问`7003 GET /v1/casbin/testWatcher`接口，此时期待的结果应该为`7003 7101`两个项目都要有 updating 信息(我特意写了个 logger.warn 来打印) 7. 结果
+
+```ts
+// 7003
+2022-08-27 17:01:14,380 INFO 48839 [-/127.0.0.1/-/7ms GET /v1/casbin/testWatcher] { query: {} }
+2022-08-27 17:01:14,622 WARN 48839 casbin is updating.
+2022-08-27 17:01:14,742 WARN 48839 casbin is updating.
+// 7101
+2022-08-27 17:01:14,620 WARN 48723 casbin is updating.
+2022-08-27 17:01:14,741 WARN 48723 casbin is updating.
+
+```
+
+## 总结
+
+现在你已经超越了你自己，知道了 casbin watcher 是如何运作的，也看了看 redis-watcher 的核心源码，发现其实这些插件库也没那么难，如果你想甚至都可以自己为 casbin 写一个插件！

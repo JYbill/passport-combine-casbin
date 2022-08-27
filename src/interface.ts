@@ -10,3 +10,10 @@ export interface IGetUserResponse {
   message: string;
   data: IUserOptions;
 }
+
+export interface GithubAuthResponse {
+  code: string;
+  error: string;
+  error_description: string;
+  error_uri: string;
+}

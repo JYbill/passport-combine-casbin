@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "@casbin/redis-watcher": "^1.0.2",
+    "@midwayjs/axios": "3",
     "@midwayjs/bootstrap": "^3.4.12",
     "@midwayjs/core": "^3.4.12",
     "@midwayjs/decorator": "^3.4.11",
@@ -19,6 +20,7 @@
     "crypto-js": "^4.1.1",
     "dotenv": "^16.0.1",
     "egg": "^2.36.0",
+    "passport-github": "^1.1.0",
     "passport-jwt": "^4.0.0"
   },
   "devDependencies": {

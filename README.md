@@ -270,11 +270,15 @@ m2 = eval(p2.sub_rule) && r2.obj == p2.obj && r2.act == p2.act && p2.eft == 'all
 
 - todo：继续完成...
 
-> 推荐参考文档:
+> 强烈推荐的参考文档:
 >
-> - [讲解各种模型的含义从最基本的 ACL 到 RBAC 到 RBAC 继承和 ABAC 模型(外网推荐)](https://medium.com/wesionary-team/understanding-casbin-with-different-access-control-model-configurations-faebc60f6da5)
-> - [上面文献翻不了外网的同学，点击这个看 md](./doc/Understanding%20Casbin%20with%20different%20Access%20Control%20Model%20Configurations.md)
+> 1. [讲解各种模型的含义从最基本的 ACL 到 RBAC 到 RBAC 继承和 ABAC 模型(外网推荐)](https://medium.com/wesionary-team/understanding-casbin-with-different-access-control-model-configurations-faebc60f6da5)
+> 2. [上面文献翻不了外网的同学，点击这个看 md](./doc/Understanding%20Casbin%20with%20different%20Access%20Control%20Model%20Configurations.md)
 
 ## 什么是 Casbin Watcher？
 
 > 篇幅较长，另起了一个 md：[Casbin Watcher](./doc/Watcher.md)
+
+## passport + passport-github GitHub 认证流程
+
+> 篇幅较长，另起了一个 md：[passport-github 认证流程](./doc/Watcher.md)

@@ -24,7 +24,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
   }
   getStrategyOptions() {
     return {
-      // 下面这三个参数要和你github oauth设置的一样！否则
+      // 下面这三个参数要和你github oauth设置的一样！否则github会返回错误信息
       clientID: this.env.GITHUB_CLIENT_ID,
       clientSecret: this.env.GITHUB_CLIENT_SECRET,
       callbackURL: `http://localhost:${this.port}/v1/auth/github/cb`,

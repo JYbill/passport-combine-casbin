@@ -38,7 +38,16 @@ export default (appInfo: MidwayAppInfo) => {
     },
 
     // casbin、jwt白名单
-    middlewareWhiteList: ['/v1/user/login', '/v1/user/register', '/v1/user/checkUsername', '/v1/casbin/update', '/v1/casbin/testWatcher', '/v1/auth/github', '/v1/auth/github/cb'],
+    middlewareWhiteList: [
+      '/v1/user/login',
+      '/v1/user/register',
+      '/v1/user/checkUsername',
+      '/v1/casbin/update',
+      '/v1/casbin/testWatcher',
+      '/v1/auth/github',
+      '/v1/auth/github/cb',
+      '/v1/auth/github/token',
+    ],
 
     // redis
     redis: {
@@ -53,5 +62,8 @@ export default (appInfo: MidwayAppInfo) => {
       secret: 'xiaoqinvar`s security key.',
       expiresIn: '2 days', // https://github.com/vercel/ms
     },
+
+    // axios
+    axios: {},
   } as MidwayConfig;
 };

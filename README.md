@@ -56,6 +56,12 @@ REDIS_USERNAME=redis用户名
 REDIS_PASSWORD=redis密码
 REDIS_IP=你的ip:端口
 REDIS_URL=redis://:${REDIS_PASSWORD}@${REDIS_IP}/0
+
+# github
+# github申请oauth2.0 流程
+# doc：https://docs.github.com/cn/developers/apps/building-oauth-apps/creating-an-oauth-app
+GITHUB_CLIENT_ID=github client id
+GITHUB_CLIENT_SECRET=密钥
 ```
 
 ## 什么是 Casbin？

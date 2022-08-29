@@ -2,7 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@casbin/redis-watcher': ^1.0.2
-  '@midwayjs/axios': '3'
+  '@midwayjs/axios': ^3.4.13
   '@midwayjs/bootstrap': ^3.4.12
   '@midwayjs/cli': ^1.3.11
   '@midwayjs/core': ^3.4.12

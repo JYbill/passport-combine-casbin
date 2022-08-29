@@ -1,8 +1,9 @@
+import { BadRequestError } from '@midwayjs/core/dist/error/http';
 import { JwtPassportMiddleware } from './middleware/jwt.middleware';
 import { CasbinMiddleware } from './middleware/casbin.middleware';
 import { PrismaClient } from '@prisma/client';
-import { App, Configuration, Inject } from '@midwayjs/decorator';
-import { ILifeCycle } from '@midwayjs/core';
+import { App, Configuration, Inject, Logger } from '@midwayjs/decorator';
+import { ILifeCycle, IMidwayContainer, IMidwayLogger } from '@midwayjs/core';
 import { Application } from 'egg';
 import { resolve } from 'path';
 import * as egg from '@midwayjs/web';
@@ -16,10 +17,11 @@ import * as passport from '@midwayjs/passport';
 import * as validate from '@midwayjs/validate';
 import { ValidateErrorFilter } from './filter/validate.filter';
 import * as dotenv from 'dotenv';
+import * as axios from '@midwayjs/axios';
 
 dotenv.config();
 @Configuration({
-  imports: [egg, jwt, passport, validate],
+  imports: [egg, jwt, passport, validate, axios],
   importConfigs: [resolve(__dirname, './config')],
 })
 export class ContainerLifeCycle implements ILifeCycle {
@@ -29,7 +31,11 @@ export class ContainerLifeCycle implements ILifeCycle {
   @Inject()
   prismaClient: PrismaClient;
 
-  async onReady() {
+  @Logger()
+  logger: IMidwayLogger;
+
+  async onReady(container: IMidwayContainer) {
+    // middleware
     //           result -> log -> jwt -> casbin -> request
     // result <- filter <- log <- jwt <- casbin <- request
     this.app.useMiddleware([LogMiddleware, CasbinMiddleware]);
@@ -40,6 +46,31 @@ export class ContainerLifeCycle implements ILifeCycle {
 
     // filters
     this.app.useFilter([DefaultErrorFilter, MidwayHttpErrorFilter, NotFoundFilter, ValidateErrorFilter]);
+
+    // axios interceptors 拦截器
+    const httpServiceFactory = await container.getAsync(axios.HttpServiceFactory);
+    const defaultAxios = httpServiceFactory.get();
+    const githubAxios = httpServiceFactory.get('github');
+    defaultAxios.interceptors.request.use(
+      config => {
+        return config;
+      },
+      error => {
+        this.logger.error('axios request error.');
+        this.logger.error(error);
+        throw new BadRequestError('[axios error] 请求错误');
+      }
+    );
+    defaultAxios.interceptors.response.use(
+      config => {
+        return config;
+      },
+      error => {
+        this.logger.error('axios response error.');
+        this.logger.error(error);
+        throw new BadRequestError(`[axios error] 响应错误 ${error}`);
+      }
+    );
   }
 
   async onStop(): Promise<void> {

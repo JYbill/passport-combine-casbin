@@ -5,7 +5,7 @@
   "private": true,
   "dependencies": {
     "@casbin/redis-watcher": "^1.0.2",
-    "@midwayjs/axios": "3",
+    "@midwayjs/axios": "^3.4.13",
     "@midwayjs/bootstrap": "^3.4.12",
     "@midwayjs/core": "^3.4.12",
     "@midwayjs/decorator": "^3.4.11",

@@ -287,4 +287,4 @@ m2 = eval(p2.sub_rule) && r2.obj == p2.obj && r2.act == p2.act && p2.eft == 'all
 
 ## passport + passport-github GitHub 认证流程
 
-> 篇幅较长，另起了一个 md：[passport-github 认证流程](./doc/Watcher.md)
+> 篇幅较长，另起了一个 md：[passport-github 认证流程](./doc/Github%20authentication.md)

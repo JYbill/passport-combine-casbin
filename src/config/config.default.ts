@@ -73,7 +73,7 @@ export default (appInfo: MidwayAppInfo) => {
 
     // 第三方登录配置
     github: {
-      redirect: 'https://127.0.0.1:5173/',
+      redirect: 'https://127.0.0.1:5173/github',
     },
   } as MidwayConfig;
 };

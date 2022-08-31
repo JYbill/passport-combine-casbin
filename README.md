@@ -8,7 +8,7 @@
 - ORM： prisma ✅
 - DB: mongoDB(需要副本集开启事物) ✅
 - Front: React✅ (有考虑尝试 SSR，可以但没必要，主要是第一次练习用)
-- Cache: redis(后续可能采用做 casbin-watcher 替代内存 watcher) ❌
+- Cache: redis(后续可能采用做 casbin-watcher 替代内存 watcher) ✅
 
 ## 包含技术点
 

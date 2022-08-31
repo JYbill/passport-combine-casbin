@@ -19,6 +19,7 @@
         "singleQuote": true,
         "printWidth": 180
       }
-    ]
+    ],
+    "node/no-unpublished-import": "off"
   }
 }

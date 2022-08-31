@@ -29,6 +29,12 @@ export default abstract class BaseService<T> {
    * @returns
    */
   async findOne(data: { where: Partial<T>; select?: FieldSelectable<T, boolean> }): Promise<T> {
+    // 不存在select
+    if (!data.select) {
+      return this.prismaClient[this.model].findFirst(data);
+    }
+
+    // 存在select增加固定条件
     // 默认返回需要的指定字段
     (data.select as FieldSelectable<any, boolean>).id = true;
 
@@ -36,6 +42,7 @@ export default abstract class BaseService<T> {
     if (this.model === 'user' && (data.select as FieldSelectable<UserVo, boolean>).password === undefined) {
       (data.select as FieldSelectable<UserVo, boolean>).password = false;
     }
+
     return this.prismaClient[this.model].findFirst(data);
   }
 
@@ -44,7 +51,7 @@ export default abstract class BaseService<T> {
    * @param data
    * @returns
    */
-  async create(data: { data: T }): Promise<T> {
+  async create(data: { data: Partial<T> }): Promise<T> {
     return this.prismaClient[this.model].create(data);
   }
 }

@@ -49,6 +49,9 @@ export default (appInfo: MidwayAppInfo) => {
       '/v1/auth/github/token',
     ],
 
+    // 忽略返回结果的接口
+    ignoreWhiteList: [],
+
     // redis
     redis: {
       clients: {
@@ -64,6 +67,13 @@ export default (appInfo: MidwayAppInfo) => {
     },
 
     // axios
-    axios: {},
+    axios: {
+      timeout: 3000,
+    },
+
+    // 第三方登录配置
+    github: {
+      redirect: 'https://127.0.0.1:5173/',
+    },
   } as MidwayConfig;
 };

@@ -18,7 +18,9 @@ specifiers:
   '@types/crypto-js': ^4.1.1
   '@types/jest': ^26.0.24
   '@types/node': ^14.18.26
+  '@types/passport-github2': ^1.2.5
   '@types/passport-jwt': ^3.0.6
+  axios: ^0.27.2
   casbin: 5.14.0-beta.4
   casbin-prisma-adapter: ^1.2.0
   cross-env: ^6.0.3
@@ -30,6 +32,7 @@ specifiers:
   jest: ^26.6.3
   mwts: ^1.3.0
   passport-github: ^1.1.0
+  passport-github2: ^0.1.12
   passport-jwt: ^4.0.0
   prisma: ^4.2.1
   ts-jest: ^26.5.6
@@ -54,6 +57,7 @@ dependencies:
   dotenv: registry.npmmirror.com/dotenv/16.0.1
   egg: registry.npmmirror.com/egg/2.36.0
   passport-github: registry.npmmirror.com/passport-github/1.1.0
+  passport-github2: registry.npmmirror.com/passport-github2/0.1.12
   passport-jwt: registry.npmmirror.com/passport-jwt/4.0.0
 
 devDependencies:
@@ -63,7 +67,9 @@ devDependencies:
   '@types/crypto-js': registry.npmmirror.com/@types/crypto-js/4.1.1
   '@types/jest': registry.npmmirror.com/@types/jest/26.0.24
   '@types/node': registry.npmmirror.com/@types/node/14.18.26
+  '@types/passport-github2': registry.npmmirror.com/@types/passport-github2/1.2.5
   '@types/passport-jwt': registry.npmmirror.com/@types/passport-jwt/3.0.6
+  axios: registry.npmmirror.com/axios/0.27.2
   cross-env: registry.npmmirror.com/cross-env/6.0.3
   egg-mock: registry.npmmirror.com/egg-mock/3.26.0
   ioredis: registry.npmmirror.com/ioredis/5.2.3
@@ -1713,6 +1719,24 @@ packages:
     version: 2.4.1
     dev: true
 
+  registry.npmmirror.com/@types/oauth/0.9.1:
+    resolution: {integrity: sha512-a1iY62/a3yhZ7qH7cNUsxoI3U/0Fe9+RnuFrpTKr+0WVOzbKlSLojShCKe20aOD1Sppv+i8Zlq0pLDuTJnwS4A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/oauth/-/oauth-0.9.1.tgz}
+    name: '@types/oauth'
+    version: 0.9.1
+    dependencies:
+      '@types/node': registry.npmmirror.com/@types/node/14.18.26
+    dev: true
+
+  registry.npmmirror.com/@types/passport-github2/1.2.5:
+    resolution: {integrity: sha512-+WLyrd8JPsCxroK34EjegR0j3FMxp6wqB9cw/sRCFkWT9qic1dymAn021gr336EpyjzdhjUd2KKrqyxvdFSvOA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/passport-github2/-/passport-github2-1.2.5.tgz}
+    name: '@types/passport-github2'
+    version: 1.2.5
+    dependencies:
+      '@types/express': registry.npmmirror.com/@types/express/4.17.13
+      '@types/passport': registry.npmmirror.com/@types/passport/1.0.10
+      '@types/passport-oauth2': registry.npmmirror.com/@types/passport-oauth2/1.4.11
+    dev: true
+
   registry.npmmirror.com/@types/passport-jwt/3.0.6:
     resolution: {integrity: sha512-cmAAMIRTaEwpqxlrZyiEY9kdibk94gP5KTF8AT1Ra4rWNZYHNMreqhKUEeC5WJtuN5SJZjPQmV+XO2P5PlnvNQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/passport-jwt/-/passport-jwt-3.0.6.tgz}
     name: '@types/passport-jwt'
@@ -1721,6 +1745,16 @@ packages:
       '@types/express': registry.npmmirror.com/@types/express/4.17.13
       '@types/jsonwebtoken': registry.npmmirror.com/@types/jsonwebtoken/8.5.9
       '@types/passport-strategy': registry.npmmirror.com/@types/passport-strategy/0.2.35
+    dev: true
+
+  registry.npmmirror.com/@types/passport-oauth2/1.4.11:
+    resolution: {integrity: sha512-KUNwmGhe/3xPbjkzkPwwcPmyFwfyiSgtV1qOrPBLaU4i4q9GSCdAOyCbkFG0gUxAyEmYwqo9OAF/rjPjJ6ImdA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/passport-oauth2/-/passport-oauth2-1.4.11.tgz}
+    name: '@types/passport-oauth2'
+    version: 1.4.11
+    dependencies:
+      '@types/express': registry.npmmirror.com/@types/express/4.17.13
+      '@types/oauth': registry.npmmirror.com/@types/oauth/0.9.1
+      '@types/passport': registry.npmmirror.com/@types/passport/1.0.10
     dev: true
 
   registry.npmmirror.com/@types/passport-strategy/0.2.35:
@@ -2339,7 +2373,6 @@ packages:
       form-data: registry.npmmirror.com/form-data/4.0.0
     transitivePeerDependencies:
       - debug
-    dev: false
 
   registry.npmmirror.com/babel-jest/26.6.3_@babel+core@7.18.13:
     resolution: {integrity: sha512-pl4Q+GAVOHwvjrck6jKjvmGhnO3jHX/xuB9d27f+EJZ/6k+6nMuPjorrYp7s++bKKdANwzElBWnLWaObvTnaZA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/babel-jest/-/babel-jest-26.6.3.tgz}
@@ -4722,7 +4755,6 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-    dev: false
 
   registry.npmmirror.com/for-in/1.0.2:
     resolution: {integrity: sha512-7EwmXrOjyL+ChxMhmG5lnW9MPt1aIeZEwKhQzoBUdTV0N3zuwWDZYVJatDvZ2OyzPUvdIAZDsCetk3coyMfcnQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/for-in/-/for-in-1.0.2.tgz}
@@ -7941,6 +7973,15 @@ packages:
     name: passport-github
     version: 1.1.0
     engines: {node: '>= 0.4.0'}
+    dependencies:
+      passport-oauth2: registry.npmmirror.com/passport-oauth2/1.6.1
+    dev: false
+
+  registry.npmmirror.com/passport-github2/0.1.12:
+    resolution: {integrity: sha512-3nPUCc7ttF/3HSP/k9sAXjz3SkGv5Nki84I05kSQPo01Jqq1NzJACgMblCK0fGcv9pKCG/KXU3AJRDGLqHLoIw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/passport-github2/-/passport-github2-0.1.12.tgz}
+    name: passport-github2
+    version: 0.1.12
+    engines: {node: '>= 0.8.0'}
     dependencies:
       passport-oauth2: registry.npmmirror.com/passport-oauth2/1.6.1
     dev: false

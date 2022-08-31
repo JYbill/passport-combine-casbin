@@ -20,19 +20,42 @@ model CasbinRule {
   @@map("casbin_rule")
 }
 
-// 查询直接根据casbin查，不用逻辑外键查
-// 加唯一即可
 model User {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  username     String   @unique()
-  nickname     String // 昵称
-  password     String
-  salt         String // 信息摘要加密盐
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  username String @unique() // 查询直接根据casbin查，不用逻辑外键查，加唯一即可
+  nickname String // 昵称
+  password String
+  salt     String // 信息摘要加密盐
+
   gmt_create   DateTime @default(now())
   gmt_modified DateTime @default(now()) @updatedAt
   isAdmin      Boolean  @default(false) // 是否是管理员，作用于casbin的超级管理员权限
 
+  // 一对一 github : users
+  github Github?
+
   @@map("users")
+}
+
+model Github {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  githubId  String
+  username  String
+  nickname  String
+  avatarUrl String // 头像
+  email     String
+  bio       String // 个人简介
+  location  String // 地域
+  webToken  String // web token码
+
+  gmt_create   DateTime @default(now())
+  gmt_modified DateTime @default(now()) @updatedAt
+
+  // 一对一 github : users
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String? @unique @db.ObjectId
+
+  @@map("github")
 }
 
 model Role {

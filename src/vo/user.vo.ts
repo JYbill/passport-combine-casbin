@@ -1,3 +1,4 @@
+import { TGithub } from './../type';
 /**
  * @file: User.vo.ts
  * @author: xiaoqinvar

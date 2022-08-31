@@ -50,7 +50,6 @@ export class ContainerLifeCycle implements ILifeCycle {
     // axios interceptors 拦截器
     const httpServiceFactory = await container.getAsync(axios.HttpServiceFactory);
     const defaultAxios = httpServiceFactory.get();
-    const githubAxios = httpServiceFactory.get('github');
     defaultAxios.interceptors.request.use(
       config => {
         return config;

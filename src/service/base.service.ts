@@ -51,7 +51,16 @@ export default abstract class BaseService<T> {
    * @param data
    * @returns
    */
-  async create(data: { data: Partial<T> }): Promise<T> {
-    return this.prismaClient[this.model].create(data);
+  async create(arg: { data: Partial<T> }): Promise<T> {
+    return this.prismaClient[this.model].create(arg);
+  }
+
+  /**
+   * 新增一个
+   * @param data
+   * @returns
+   */
+  async updateOne(arg: { data: Partial<T>; where: Partial<T> }): Promise<T> {
+    return this.prismaClient[this.model].update(arg);
   }
 }

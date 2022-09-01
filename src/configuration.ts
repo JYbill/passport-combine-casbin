@@ -18,10 +18,11 @@ import * as validate from '@midwayjs/validate';
 import { ValidateErrorFilter } from './filter/validate.filter';
 import * as dotenv from 'dotenv';
 import * as axios from '@midwayjs/axios';
+import * as crossDomain from '@midwayjs/cross-domain';
 
 dotenv.config();
 @Configuration({
-  imports: [egg, jwt, passport, validate, axios],
+  imports: [egg, jwt, passport, validate, axios, crossDomain],
   importConfigs: [resolve(__dirname, './config')],
 })
 export class ContainerLifeCycle implements ILifeCycle {
@@ -56,7 +57,6 @@ export class ContainerLifeCycle implements ILifeCycle {
       },
       error => {
         this.logger.error('axios request error.');
-        this.logger.error(error);
         throw new BadRequestError('[axios error] 请求错误');
       }
     );
@@ -66,7 +66,6 @@ export class ContainerLifeCycle implements ILifeCycle {
       },
       error => {
         this.logger.error('axios response error.');
-        this.logger.error(error);
         throw new BadRequestError(`[axios error] 响应错误 ${error}`);
       }
     );

@@ -39,7 +39,7 @@ model User {
 
 model Github {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
-  githubId  String
+  githubId  String @unique
   username  String
   nickname  String
   avatarUrl String // 头像

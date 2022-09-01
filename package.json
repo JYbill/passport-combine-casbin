@@ -5,9 +5,10 @@
   "private": true,
   "dependencies": {
     "@casbin/redis-watcher": "^1.0.2",
-    "@midwayjs/axios": "^3.4.13",
+    "@midwayjs/axios": "^3.5.0",
     "@midwayjs/bootstrap": "^3.4.12",
     "@midwayjs/core": "^3.4.12",
+    "@midwayjs/cross-domain": "^3.5.0",
     "@midwayjs/decorator": "^3.4.11",
     "@midwayjs/jwt": "^3.4.12",
     "@midwayjs/passport": "^3.4.12",

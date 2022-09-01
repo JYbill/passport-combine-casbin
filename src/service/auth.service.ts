@@ -17,7 +17,8 @@ export class AuthService extends BaseService<TGithub> {
   githubApi: GithubApi;
   @Inject()
   jwt: JwtService;
-
+  @Config('github')
+  githubConfig;
   @Config('egg.port')
   port: number;
 
@@ -53,7 +54,7 @@ export class AuthService extends BaseService<TGithub> {
         client_id: this.env.GITHUB_CLIENT_ID,
         client_secret: this.env.GITHUB_CLIENT_SECRET,
         code,
-        redirect_uri: `http://127.0.0.1:${this.port}/v1/auth/github`,
+        redirect_uri: this.githubConfig.redirect,
       },
       {
         headers: {
@@ -71,29 +72,41 @@ export class AuthService extends BaseService<TGithub> {
     const githubId = (info.data.id as number).toString();
     const github = await this.existGithubAccount(githubId);
 
+    // 更新、创建数据公共参数
+    const dbParams = {
+      githubId,
+      avatarUrl,
+      username,
+      nickname,
+      email,
+      bio,
+      location,
+      webToken: token,
+    };
+
     // 存在生成token并返回
     if (github) {
+      // 存在 -> 更新头像、web
+      await this.updateOne({
+        data: dbParams,
+        where: {
+          githubId,
+        },
+      });
       return this.generateGithubToken(github);
     }
 
     // 将数据添加db
     const createRet = await this.create({
-      data: {
-        githubId,
-        avatarUrl,
-        username,
-        nickname,
-        email,
-        bio,
-        location,
-        webToken: token,
-      },
+      data: dbParams,
     });
     this.logger.info(createRet);
     if (!createRet) {
       throw new BadRequestError('创建用户github错误.');
     }
-    return '';
+    createRet.webToken = undefined;
+    const githubPayload = JSON.parse(JSON.stringify(createRet));
+    return this.generateGithubToken(githubPayload);
   }
 
   /**
@@ -125,6 +138,6 @@ export class AuthService extends BaseService<TGithub> {
    * @returns
    */
   async generateGithubToken(payload: Record<string, any>) {
-    return this.jwt.sign(payload);
+    return 'Bearer ' + (await this.jwt.sign(payload));
   }
 }

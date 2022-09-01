@@ -68,12 +68,19 @@ export default (appInfo: MidwayAppInfo) => {
 
     // axios
     axios: {
-      timeout: 3000,
+      default: {
+        timeout: 5000,
+      },
     },
 
     // 第三方登录配置
     github: {
       redirect: 'https://127.0.0.1:5173/github',
+    },
+
+    // cors
+    cors: {
+      maxAge: 30,
     },
   } as MidwayConfig;
 };

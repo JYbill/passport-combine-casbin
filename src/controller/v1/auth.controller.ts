@@ -28,7 +28,6 @@ export class CasbinController extends BaseController {
    */
   // @Get('/github/cb', { middleware: [GithubPassportMiddleware] })
   @Get('/github/cb')
-  @HttpCode(302)
   async githubOAuthCallback(@Query() githubQuery: GithubAuthResponse) {
     // this.logger.info(githubQuery);
     // 用户拒绝
@@ -37,8 +36,10 @@ export class CasbinController extends BaseController {
     }
     const token = await this.authService.requestGithubToken(githubQuery.code);
 
-    let redirectUrl = this.githubLoginConfig['redirect'];
-    redirectUrl += `#state=${githubQuery.state}&auth=${token}`;
-    this.ctx.redirect(redirectUrl);
+    return {
+      code: githubQuery.code,
+      state: githubQuery.state,
+      auth: token,
+    };
   }
 }

@@ -1,7 +1,7 @@
 # passport-combine-casbin
 
 > but not only casbin
-> passport-combine-casbin-react：前端应用(vite + react 17)
+> passport-combine-casbin-react：前端应用(vite + react 17): [跳转链接](https://github.com/JYbill/passport-combine-casbin-react)
 
 ## 技术选型
 

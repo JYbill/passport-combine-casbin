@@ -138,6 +138,7 @@ export class AuthService extends BaseService<TGithub> {
    * @returns
    */
   async generateGithubToken(payload: Record<string, any>) {
+    payload['type'] = 'github';
     return 'Bearer ' + (await this.jwt.sign(payload));
   }
 }

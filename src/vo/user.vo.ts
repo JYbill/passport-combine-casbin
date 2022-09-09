@@ -33,6 +33,33 @@ export class UserVo implements TUser {
   gmt_modified: Date;
 }
 
+export class UserUpdate implements TUser {
+  // 禁止修改
+  @Rule(RuleType.forbidden())
+  id: string;
+
+  @Rule(RuleType.forbidden())
+  username: string;
+
+  @Rule(RuleType.string().min(3).max(10))
+  nickname: string;
+
+  @Rule(RuleType.forbidden())
+  password: string;
+
+  @Rule(RuleType.forbidden())
+  salt: string;
+
+  @Rule(RuleType.boolean().allow())
+  isAdmin: boolean;
+
+  @Rule(RuleType.forbidden())
+  gmt_create: Date;
+
+  @Rule(RuleType.forbidden())
+  gmt_modified: Date;
+}
+
 /**
  * 校验部分
  */

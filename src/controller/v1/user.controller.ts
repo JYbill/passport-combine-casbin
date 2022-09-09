@@ -4,17 +4,21 @@
  * @desc：用户控制器
  * @date: 2022-08-12 17:00:15
  */
-import { Body, Controller, Get, Headers, Inject, Logger, Post, Query } from '@midwayjs/decorator';
+import { Body, Controller, Get, Headers, Inject, Logger, Param, Post, Put, Query } from '@midwayjs/decorator';
 import { UserService } from './../../service/user.service';
 import { BadRequestError } from '@midwayjs/core/dist/error/http';
 import { Validate } from '@midwayjs/validate';
-import { UserVo, UserVoUsername } from '../../vo/user.vo';
+import { UserUpdate, UserVo, UserVoUsername } from '../../vo/user.vo';
 import BaseController from '../base.controller';
+import { Enforcer } from 'casbin';
+import { IsRoot } from '../../decorator/isRoot.decorator';
 
 @Controller('/v1/user')
 export class UserController extends BaseController {
   @Inject()
   userService: UserService;
+  @Inject('enforcer')
+  enforcer: Enforcer;
 
   /**
    * 测试：jwt-passport校验中间件
@@ -46,7 +50,7 @@ export class UserController extends BaseController {
     },
   })
   async register(@Body() user: UserVo) {
-    this.logger.info(user);
+    // this.logger.info(user);
     // 先检测同名
     await this.checkSameUsername(user);
     // 再注册
@@ -81,5 +85,31 @@ export class UserController extends BaseController {
       return '未同名';
     }
     throw new BadRequestError('存在同名');
+  }
+
+  /**
+   * 获取所有用户
+   * @returns
+   */
+  @Get()
+  async getUsers() {
+    return this.userService.getUsers();
+  }
+
+  /**
+   * 更新单个用户
+   * @param id
+   * @param user
+   * @returns
+   */
+  @Put('/:id')
+  @Validate()
+  @IsRoot()
+  async updateOne(@Param('id') id, @Body() user: UserUpdate) {
+    const username = this.ctx.state.user['username'];
+    // this.logger.info(id);
+    // this.logger.info(user);
+    // return this.userService.updateUser(id, user);
+    return 'ok.';
   }
 }

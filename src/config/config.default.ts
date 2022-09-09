@@ -82,5 +82,13 @@ export default (appInfo: MidwayAppInfo) => {
     cors: {
       maxAge: 30,
     },
+
+    // validator
+    validate: {
+      validationOptions: {
+        // 找出所有错误
+        abortEarly: false,
+      },
+    },
   } as MidwayConfig;
 };

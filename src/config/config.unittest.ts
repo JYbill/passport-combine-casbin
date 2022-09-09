@@ -11,5 +11,6 @@ export default (appInfo: MidwayAppInfo) => {
     security: {
       csrf: false,
     },
+    midwayLogger: {},
   } as MidwayConfig & DefaultConfig;
 };

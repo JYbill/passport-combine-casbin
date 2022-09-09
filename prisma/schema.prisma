@@ -31,9 +31,6 @@ model User {
   gmt_modified DateTime @default(now()) @updatedAt
   isAdmin      Boolean  @default(false) // 是否是管理员，作用于casbin的超级管理员权限
 
-  // 一对一 github : users
-  github Github?
-
   @@map("users")
 }
 
@@ -50,10 +47,6 @@ model Github {
 
   gmt_create   DateTime @default(now())
   gmt_modified DateTime @default(now()) @updatedAt
-
-  // 一对一 github : users
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String? @unique @db.ObjectId
 
   @@map("github")
 }

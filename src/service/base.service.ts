@@ -5,9 +5,10 @@
  * @date: 2022-08-21 16:30:42
  */
 import { ILogger } from '@midwayjs/core';
-import { Inject } from '@midwayjs/decorator';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Inject, sleep } from '@midwayjs/decorator';
+import { prisma, Prisma, PrismaClient } from '@prisma/client';
 import { Context } from 'egg';
+import { IPrismaCreate, IPrismaSearch, IPrismaUpdate, IPrismaUpsert } from '../interface';
 import { FieldSelectable } from '../type';
 import { UserVo } from '../vo/user.vo';
 
@@ -28,22 +29,43 @@ export default abstract class BaseService<T> {
    * @param data
    * @returns
    */
-  async findOne(data: { where: Partial<T>; select?: FieldSelectable<T, boolean> }): Promise<T> {
-    // 不存在select
-    if (!data.select) {
-      return this.prismaClient[this.model].findFirst(data);
+  async findOne(args: IPrismaSearch<T>): Promise<T> {
+    if (this.model === 'user') {
+      const select = args.select as FieldSelectable<UserVo, boolean>;
+      if (!args.select) {
+        (args.select as FieldSelectable<UserVo, boolean>) = {
+          id: true,
+          username: true,
+          nickname: true,
+          isAdmin: true,
+          gmt_create: true,
+          gmt_modified: true,
+        };
+      }
     }
 
-    // 存在select增加固定条件
-    // 默认返回需要的指定字段
-    (data.select as FieldSelectable<any, boolean>).id = true;
+    return this.prismaClient[this.model].findFirst(args);
+  }
 
-    // 特定表/集合中不要返回的字段
-    if (this.model === 'user' && (data.select as FieldSelectable<UserVo, boolean>).password === undefined) {
-      (data.select as FieldSelectable<UserVo, boolean>).password = false;
+  /**
+   * 根据条件查询所有
+   * @param args
+   */
+  async findMany(args: IPrismaSearch<T>) {
+    if (this.model === 'user') {
+      const select = args.select as FieldSelectable<UserVo, boolean>;
+      if (!args.select) {
+        (args.select as FieldSelectable<UserVo, boolean>) = {
+          id: true,
+          username: true,
+          nickname: true,
+          isAdmin: true,
+          gmt_create: true,
+          gmt_modified: true,
+        };
+      }
     }
-
-    return this.prismaClient[this.model].findFirst(data);
+    return this.prismaClient[this.model].findMany(args);
   }
 
   /**
@@ -51,7 +73,7 @@ export default abstract class BaseService<T> {
    * @param data
    * @returns
    */
-  async create(arg: { data: Partial<T> }): Promise<T> {
+  async create(arg: IPrismaCreate<T>): Promise<T> {
     return this.prismaClient[this.model].create(arg);
   }
 
@@ -60,7 +82,16 @@ export default abstract class BaseService<T> {
    * @param data
    * @returns
    */
-  async updateOne(arg: { data: Partial<T>; where: Partial<T> }): Promise<T> {
+  async updateOne(arg: IPrismaUpdate<T>): Promise<T> {
     return this.prismaClient[this.model].update(arg);
+  }
+
+  /**
+   * 更新/创建字段
+   * @param arg
+   * @returns
+   */
+  async upsert(arg: IPrismaUpsert<T>): Promise<T> {
+    return this.prismaClient[this.model].upsert(arg);
   }
 }

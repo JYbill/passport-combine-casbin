@@ -2,8 +2,8 @@ import { BadRequestError } from '@midwayjs/core/dist/error/http';
 import { JwtPassportMiddleware } from './middleware/jwt.middleware';
 import { CasbinMiddleware } from './middleware/casbin.middleware';
 import { PrismaClient } from '@prisma/client';
-import { App, Configuration, Inject, Logger } from '@midwayjs/decorator';
-import { ILifeCycle, IMidwayContainer, IMidwayLogger } from '@midwayjs/core';
+import { App, Configuration, Inject, JoinPoint, Logger } from '@midwayjs/decorator';
+import { ILifeCycle, IMidwayContainer, IMidwayLogger, MidwayDecoratorService } from '@midwayjs/core';
 import { Application } from 'egg';
 import { resolve } from 'path';
 import * as egg from '@midwayjs/web';
@@ -19,6 +19,7 @@ import { ValidateErrorFilter } from './filter/validate.filter';
 import * as dotenv from 'dotenv';
 import * as axios from '@midwayjs/axios';
 import * as crossDomain from '@midwayjs/cross-domain';
+import { isRootNotice, IS_ROOT_KEY } from './decorator/isRoot.decorator';
 
 dotenv.config();
 @Configuration({
@@ -31,9 +32,10 @@ export class ContainerLifeCycle implements ILifeCycle {
 
   @Inject()
   prismaClient: PrismaClient;
-
   @Logger()
   logger: IMidwayLogger;
+  @Inject()
+  decoratorService: MidwayDecoratorService;
 
   async onReady(container: IMidwayContainer) {
     // middleware
@@ -49,6 +51,17 @@ export class ContainerLifeCycle implements ILifeCycle {
     this.app.useFilter([DefaultErrorFilter, MidwayHttpErrorFilter, NotFoundFilter, ValidateErrorFilter]);
 
     // axios interceptors 拦截器
+    this.axiosConfigInit(container);
+
+    // 装饰器初始化
+    this.decoratorInit();
+  }
+
+  /**
+   * axios 配置初始化
+   * @param container
+   */
+  async axiosConfigInit(container: IMidwayContainer) {
     const httpServiceFactory = await container.getAsync(axios.HttpServiceFactory);
     const defaultAxios = httpServiceFactory.get();
     defaultAxios.interceptors.request.use(
@@ -69,6 +82,11 @@ export class ContainerLifeCycle implements ILifeCycle {
         throw new BadRequestError(`[axios error] 响应错误 ${error}`);
       }
     );
+  }
+
+  async decoratorInit() {
+    // 实现方法装饰器
+    this.decoratorService.registerMethodHandler(IS_ROOT_KEY, isRootNotice);
   }
 
   async onStop(): Promise<void> {

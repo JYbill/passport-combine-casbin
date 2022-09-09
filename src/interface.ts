@@ -1,3 +1,5 @@
+import { FieldSelectable } from './type';
+
 /**
  * @description User-Service parameters
  */
@@ -26,4 +28,24 @@ export interface GithubToken extends Pick<GithubAuthResponse, 'error' | 'error_d
   access_token: string;
   token_type: string;
   scope: string;
+}
+
+export interface IPrismaSearch<T> {
+  where?: Partial<T>;
+  select?: FieldSelectable<T, boolean | number>;
+}
+
+export interface IPrismaCreate<T> {
+  data: Partial<T>;
+}
+
+export interface IPrismaUpdate<T> {
+  data: Partial<T>;
+  where: Partial<T>;
+}
+
+export interface IPrismaUpsert<T> {
+  create: Partial<T>;
+  update: Partial<T>;
+  where: Partial<T>;
 }

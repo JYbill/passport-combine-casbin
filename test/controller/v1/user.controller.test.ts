@@ -14,8 +14,6 @@ export const registerFunc = async app => {
     password: 'frog-password',
     nickname: '土壳🐎',
   });
-  // expect(verifyRes.status).toBe(200);
-  // expect(verifyRes.body.success).toBe(true);
 };
 
 /**
@@ -40,11 +38,12 @@ const loginFunc = async app => {
  * @returns token
  */
 export const loginIsBad2RegisterFunc = async app => {
-  const { token, success } = await loginFunc(app);
+  let { token, success } = await loginFunc(app);
   if (!success) {
     await registerFunc(app);
-    return loginIsBad2RegisterFunc(app);
+    token = await (await loginFunc(app)).token;
   }
+  console.log(token);
   return token;
 };
 
@@ -72,6 +71,15 @@ describe('test/controller/v1/user.controller.test.ts', () => {
   // 登陆 -> 校验token
   it('should POST /v1/user/verify', async () => {
     const res = await createHttpRequest(app).post('/v1/user/verify').set({
+      authorization: token,
+    });
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+  });
+
+  // 获取所有用户
+  it('should GET /v1/user getUser', async () => {
+    const res = await createHttpRequest(app).get('/v1/user').set({
       authorization: token,
     });
     expect(res.status).toBe(200);

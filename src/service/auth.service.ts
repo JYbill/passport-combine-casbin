@@ -70,7 +70,7 @@ export class AuthService extends BaseService<TGithub> {
     // this.logger.info(info.data);
     const { avatar_url: avatarUrl, login: username, name: nickname, email, bio, location } = info.data;
     const githubId = (info.data.id as number).toString();
-    const github = await this.existGithubAccount(githubId);
+    // const github = await this.existGithubAccount(githubId);
 
     // 更新、创建数据公共参数
     const dbParams = {
@@ -84,28 +84,19 @@ export class AuthService extends BaseService<TGithub> {
       webToken: token,
     };
 
-    // 存在生成token并返回
-    if (github) {
-      // 存在 -> 更新头像、web
-      await this.updateOne({
-        data: dbParams,
-        where: {
-          githubId,
-        },
-      });
-      return this.generateGithubToken(github);
-    }
-
-    // 将数据添加db
-    const createRet = await this.create({
-      data: dbParams,
+    // 将数据添加db / 更新db
+    const updateRet = await this.upsert({
+      create: dbParams,
+      update: dbParams,
+      where: {
+        githubId,
+      },
     });
-    this.logger.info(createRet);
-    if (!createRet) {
-      throw new BadRequestError('创建用户github错误.');
+    if (!updateRet) {
+      throw new BadRequestError('创建 or 更新用户github错误.');
     }
-    createRet.webToken = undefined;
-    const githubPayload = JSON.parse(JSON.stringify(createRet));
+    updateRet.webToken = undefined;
+    const githubPayload = JSON.parse(JSON.stringify(updateRet));
     return this.generateGithubToken(githubPayload);
   }
 

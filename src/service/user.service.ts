@@ -1,3 +1,4 @@
+import { IPrismaUpdate } from './../interface';
 import { JwtService } from '@midwayjs/jwt';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { Config, Inject, Provide } from '@midwayjs/decorator';
@@ -71,6 +72,8 @@ export class UserService extends BaseService<UserVo> {
         username: user.username,
       },
       select: {
+        nickname: true,
+        isAdmin: true,
         username: true,
         salt: true,
         password: true,
@@ -81,7 +84,7 @@ export class UserService extends BaseService<UserVo> {
     }
 
     // 盐字符串 to 盐对象
-    // this.logger.info(userRet);
+    this.logger.info(userRet);
     const password = CryptoJS.PBKDF2(user.password, userRet.salt, {
       keySize: 128 / 32,
     }).toString();
@@ -89,12 +92,47 @@ export class UserService extends BaseService<UserVo> {
       throw new BadRequestError('账号或密码错误');
     }
     userRet.password = userRet.salt = undefined;
-    // this.logger.info(userRet);
+    this.logger.info(userRet);
     // 默认根据jwt策略里配置的密钥自动设置，不用管密钥
     const token = this.jwt.signSync(userRet, {
       expiresIn: this.jwtConfig.expiresIn,
     });
     return token;
+  }
+
+  /**
+   * 获取所有用户
+   * @returns
+   */
+  async getUsers() {
+    return this.findMany({});
+  }
+
+  /**
+   * 更新单个用户
+   * @param user
+   * @returns
+   */
+  async updateUser(id: string, user: UserVo) {
+    return this.updateOne({
+      where: {
+        id,
+      },
+      data: user,
+    });
+  }
+
+  /**
+   * 是否是管理员
+   * @param id
+   * @returns
+   */
+  async isRoot(id: string) {
+    const user = await this.findOne({
+      where: { id },
+      select: { isAdmin: true },
+    });
+    return user.isAdmin;
   }
 
   /**

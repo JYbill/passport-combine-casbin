@@ -1,13 +1,14 @@
 import { IPrismaUpdate } from './../interface';
 import { JwtService } from '@midwayjs/jwt';
 import { Prisma, PrismaClient } from '@prisma/client';
-import { Config, Inject, Provide } from '@midwayjs/decorator';
+import { Config, Inject, Logger, Provide } from '@midwayjs/decorator';
 import { TUser } from '../type';
 import { UserVo, UserVoUsername } from '../vo/user.vo';
 import { CasbinService } from './casbin.service';
 import { BadGatewayError, BadRequestError } from '@midwayjs/core/dist/error/http';
 import BaseService from './base.service';
 import * as CryptoJS from 'crypto-js';
+import { ILogger } from '@midwayjs/core';
 /**
  * @file: user.service.ts
  * @author: xiaoqinvar
@@ -84,7 +85,7 @@ export class UserService extends BaseService<UserVo> {
     }
 
     // 盐字符串 to 盐对象
-    this.logger.info(userRet);
+    // this.logger.info(userRet);
     const password = CryptoJS.PBKDF2(user.password, userRet.salt, {
       keySize: 128 / 32,
     }).toString();
@@ -92,7 +93,7 @@ export class UserService extends BaseService<UserVo> {
       throw new BadRequestError('账号或密码错误');
     }
     userRet.password = userRet.salt = undefined;
-    this.logger.info(userRet);
+    // this.logger.info(userRet);
     // 默认根据jwt策略里配置的密钥自动设置，不用管密钥
     const token = this.jwt.signSync(userRet, {
       expiresIn: this.jwtConfig.expiresIn,
@@ -127,9 +128,10 @@ export class UserService extends BaseService<UserVo> {
    * @param id
    * @returns
    */
-  async isRoot(id: string) {
+  async isRoot(username: string) {
+    // this.logger.info('sub id:' + username);
     const user = await this.findOne({
-      where: { id },
+      where: { username },
       select: { isAdmin: true },
     });
     return user.isAdmin;

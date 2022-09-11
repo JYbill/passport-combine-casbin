@@ -1,25 +1,20 @@
 import { resolve } from 'path';
-import { IMidwayLogger } from '@midwayjs/core';
-import { Config, Init, Inject, Logger, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
+import { getCurrentApplicationContext, ILogger, IMidwayLogger } from '@midwayjs/core';
+import { App, Config, Init, Inject, Logger, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
 import { Enforcer, newEnforcer, newModel, newModelFromString, Util } from 'casbin';
 import { PrismaAdapter } from 'casbin-prisma-adapter';
 import { RedisWatcher } from '@casbin/redis-watcher';
 import { UserService } from '../service/user.service';
-import { Context } from '@midwayjs/web';
 
 @Provide()
 @Scope(ScopeEnum.Singleton)
 export class CasbinFactory {
   enforcer: Enforcer;
 
-  @Logger()
-  logger: IMidwayLogger;
-
   @Config('redis')
   redisConfig;
-
   @Inject()
-  ctx: Context;
+  logger: ILogger;
 
   env = process.env;
 
@@ -40,7 +35,9 @@ export class CasbinFactory {
     g2 = _, _
 
     [policy_effect]
+    # 要有明确的allow即通过，没有写无法通过
     e = some(where (p.eft == allow))
+    # 要有明确的deny才拒绝，没有写即通过
     e2 = !some(where (p.eft == deny))
 
     [matchers]
@@ -48,8 +45,8 @@ export class CasbinFactory {
     m = g(r.sub.username, p.sub) && g2(r.obj, p.obj) && r.act == p.act || r.sub.role == 'ROOT'
     #ABAC
     m2 = eval(p2.sub_rule) && r2.obj == p2.obj && r2.act == p2.act && p2.eft == 'allow'
-    #ABAC: 当且仅当为ROOT时才能执行
-    m3 = isRoot(r.sub.id, p.obj)
+    #ABAC: 当且仅当user isAdmin为true才能通过，其实完全可以做成AOP，这里只是演示效果
+    m3 = isRoot(r.sub.username, p.obj)
     `);
     this.enforcer = await newEnforcer(model, adapter);
 
@@ -87,7 +84,7 @@ export class CasbinFactory {
     await this.enforcer.addNamedMatchingFunc('g2', Util.keyMatch2Func);
 
     // 自定义函数
-    await this.enforcer.addFunction('isRoot', this.isRoot);
+    await this.enforcer.addFunction('isRoot', this.isRoot.bind(this));
 
     this.logger.warn('casbin is ready.');
   }
@@ -99,7 +96,7 @@ export class CasbinFactory {
    * @returns
    */
   async isRoot(subjectId: string, object: string): Promise<boolean> {
-    const userService = await this.ctx.requestContext.getAsync(UserService);
+    const userService = await getCurrentApplicationContext().getAsync(UserService);
     return userService.isRoot(subjectId);
   }
 }

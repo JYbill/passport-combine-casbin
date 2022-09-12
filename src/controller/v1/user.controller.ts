@@ -4,7 +4,7 @@
  * @desc：用户控制器
  * @date: 2022-08-12 17:00:15
  */
-import { Body, Controller, Get, Headers, Inject, Logger, Param, Post, Put, Query } from '@midwayjs/decorator';
+import { Body, Controller, Del, Get, Headers, Inject, Logger, Param, Post, Put, Query } from '@midwayjs/decorator';
 import { UserService } from './../../service/user.service';
 import { BadRequestError } from '@midwayjs/core/dist/error/http';
 import { Validate } from '@midwayjs/validate';
@@ -12,6 +12,7 @@ import { UserUpdate, UserVo, UserVoUsername } from '../../vo/user.vo';
 import BaseController from '../base.controller';
 import { Enforcer } from 'casbin';
 import { IsRoot } from '../../decorator/isRoot.decorator';
+import { ObjectIdArray } from '../../vo/objectId.vo';
 
 @Controller('/v1/user')
 export class UserController extends BaseController {
@@ -106,10 +107,19 @@ export class UserController extends BaseController {
   @Validate()
   @IsRoot()
   async updateOne(@Param('id') id, @Body() user: UserUpdate) {
-    const username = this.ctx.state.user['username'];
-    // this.logger.info(id);
-    // this.logger.info(user);
-    // return this.userService.updateUser(id, user);
+    return this.userService.updateUser(id, user);
+  }
+
+  /**
+   * 根据id数组删除用户
+   * @param idArr
+   * @returns
+   */
+  @Del()
+  @Validate()
+  @IsRoot()
+  async delUsers(@Body() idArr: ObjectIdArray) {
+    this.logger.info(idArr);
     return 'ok.';
   }
 }

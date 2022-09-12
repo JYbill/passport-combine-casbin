@@ -17,7 +17,7 @@
       "warn",
       {
         "singleQuote": true,
-        "printWidth": 180
+        "printWidth": 120
       }
     ],
     "node/no-unpublished-import": "off"

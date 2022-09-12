@@ -69,6 +69,7 @@ export class CasbinFactory {
     await this.enforcer.addNamedGroupingPolicy('g2', '/v1/user', 'userGetApi');
     await this.enforcer.addNamedGroupingPolicy('g2', '/v1/user/verify', 'userPostApi');
     await this.enforcer.addNamedGroupingPolicy('g2', '/v1/user/:id', 'userPutApi');
+    await this.enforcer.addNamedGroupingPolicy('g2', '/v1/user', 'userDelApi');
     // 所有后缀是复数的api，都属于原子操作，即有一个添加失败即全部都失败，理解为db的事物回滚，所以你数据库中有一项同样的规则及全部插入失败
     // doc：https://casbin.org/docs/zh-CN/management-api#addgroupingpolicies
     // await this.enforcer.addNamedGroupingPolicies('g2', [[]]);
@@ -78,6 +79,7 @@ export class CasbinFactory {
     await this.enforcer.addNamedPolicy('p', 'MANAGER', 'userGetApi', 'GET');
     await this.enforcer.addNamedPolicy('p', 'MANAGER', 'userPostApi', 'POST');
     await this.enforcer.addNamedPolicy('p', 'MANAGER', 'userPutApi', 'PUT');
+    await this.enforcer.addNamedPolicy('p', 'MANAGER', 'userDelApi', 'DELETE');
 
     // 启用/:id动态路由解析函数
     // 🌰：/v1/user/12345 通过该工具函数解析成可以访问 /v1/user/:id接口
@@ -91,6 +93,7 @@ export class CasbinFactory {
 
   /**
    * casbin 自定义方法是否是管理员
+   * tip: 这里查的是最新状态，也就是说当你token的isAdmin为true时，修改自己成了false，此时token还未过期，当再次修改时查到db此时为false，所以无法修改(应该在检测到用户自己修改自己时token应该重新颁发)
    * @param subjectId
    * @param object
    * @returns

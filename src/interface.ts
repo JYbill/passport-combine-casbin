@@ -42,6 +42,7 @@ export interface IPrismaCreate<T> {
 export interface IPrismaUpdate<T> {
   data: Partial<T>;
   where: Partial<T>;
+  select?: Partial<T>;
 }
 
 export interface IPrismaUpsert<T> {

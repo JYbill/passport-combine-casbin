@@ -9,7 +9,7 @@ import { Inject, sleep } from '@midwayjs/decorator';
 import { prisma, Prisma, PrismaClient } from '@prisma/client';
 import { Context } from 'egg';
 import { IPrismaCreate, IPrismaSearch, IPrismaUpdate, IPrismaUpsert } from '../interface';
-import { FieldSelectable } from '../type';
+import { FieldSelectable, TUser } from '../type';
 import { UserVo } from '../vo/user.vo';
 
 export default abstract class BaseService<T> {
@@ -24,6 +24,15 @@ export default abstract class BaseService<T> {
 
   abstract model: string;
 
+  defaultUserSelect: FieldSelectable<TUser, boolean> = {
+    id: true,
+    username: true,
+    nickname: true,
+    isAdmin: true,
+    gmt_create: true,
+    gmt_modified: true,
+  };
+
   /**
    * 获取第一个查询到的对象并返回
    * @param data
@@ -33,14 +42,7 @@ export default abstract class BaseService<T> {
     if (this.model === 'user') {
       const select = args.select as FieldSelectable<UserVo, boolean>;
       if (!args.select) {
-        (args.select as FieldSelectable<UserVo, boolean>) = {
-          id: true,
-          username: true,
-          nickname: true,
-          isAdmin: true,
-          gmt_create: true,
-          gmt_modified: true,
-        };
+        (args.select as FieldSelectable<UserVo, boolean>) = this.defaultUserSelect;
       }
     }
 
@@ -55,14 +57,7 @@ export default abstract class BaseService<T> {
     if (this.model === 'user') {
       const select = args.select as FieldSelectable<UserVo, boolean>;
       if (!args.select) {
-        (args.select as FieldSelectable<UserVo, boolean>) = {
-          id: true,
-          username: true,
-          nickname: true,
-          isAdmin: true,
-          gmt_create: true,
-          gmt_modified: true,
-        };
+        (args.select as FieldSelectable<UserVo, boolean>) = this.defaultUserSelect;
       }
     }
     return this.prismaClient[this.model].findMany(args);
@@ -82,8 +77,11 @@ export default abstract class BaseService<T> {
    * @param data
    * @returns
    */
-  async updateOne(arg: IPrismaUpdate<T>): Promise<T> {
-    return this.prismaClient[this.model].update(arg);
+  async updateOne(args: IPrismaUpdate<T>): Promise<T> {
+    if (this.model === 'user' && !args.select) {
+      (args.select as FieldSelectable<UserVo, boolean>) = this.defaultUserSelect;
+    }
+    return this.prismaClient[this.model].update(args);
   }
 
   /**

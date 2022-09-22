@@ -50,3 +50,8 @@ export interface IPrismaUpsert<T> {
   update: Partial<T>;
   where: Partial<T>;
 }
+
+export interface IPrismaDelete<T> {
+  select?: Partial<T>;
+  where: Partial<T>;
+}

@@ -6,9 +6,9 @@
  */
 import { ILogger } from '@midwayjs/core';
 import { Inject, sleep } from '@midwayjs/decorator';
-import { prisma, Prisma, PrismaClient } from '@prisma/client';
+import { prisma, Prisma, PrismaClient, PrismaPromise } from '@prisma/client';
 import { Context } from 'egg';
-import { IPrismaCreate, IPrismaSearch, IPrismaUpdate, IPrismaUpsert } from '../interface';
+import { IPrismaCreate, IPrismaDelete, IPrismaSearch, IPrismaUpdate, IPrismaUpsert } from '../interface';
 import { FieldSelectable, TUser } from '../type';
 import { UserVo } from '../vo/user.vo';
 
@@ -91,5 +91,23 @@ export default abstract class BaseService<T> {
    */
   async upsert(arg: IPrismaUpsert<T>): Promise<T> {
     return this.prismaClient[this.model].upsert(arg);
+  }
+
+  /**
+   * 删除单个
+   * @param args
+   * @returns
+   */
+  async deleteOne(args: IPrismaDelete<T>): Promise<T> {
+    return this.prismaClient[this.model].delete(args);
+  }
+
+  /**
+   * 删除多个
+   * @param args
+   * @returns
+   */
+  async deleteMany(args: IPrismaDelete<T>): Promise<Prisma.BatchPayload> {
+    return this.prismaClient[this.model].deleteMany(args);
   }
 }

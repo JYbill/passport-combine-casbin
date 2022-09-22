@@ -1,5 +1,4 @@
 import { Prisma } from '@prisma/client';
-import { type } from 'os';
 
 const casbinRule = Prisma.validator<Prisma.CasbinRuleArgs>()({});
 export type CasbinRule = Prisma.CasbinRuleGetPayload<typeof casbinRule>;

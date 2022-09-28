@@ -98,6 +98,18 @@ export class UserController extends BaseController {
   }
 
   /**
+   * 创建用户
+   * @param user
+   * @returns
+   */
+  @Post()
+  @Validate()
+  async createUser(@Body() user: UserVo) {
+    await this.checkSameUsername(user);
+    return this.userService.saveUser(user);
+  }
+
+  /**
    * 更新单个用户
    * @param id
    * @param user

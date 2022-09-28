@@ -68,6 +68,7 @@ export class CasbinFactory {
     await this.enforcer.addNamedGroupingPolicy('g2', '/v1/casbin/users', 'casbinGetApi');
     await this.enforcer.addNamedGroupingPolicy('g2', '/v1/user', 'userGetApi');
     await this.enforcer.addNamedGroupingPolicy('g2', '/v1/user/verify', 'userPostApi');
+    await this.enforcer.addNamedGroupingPolicy('g2', '/v1/user', 'userPostApi');
     await this.enforcer.addNamedGroupingPolicy('g2', '/v1/user/:id', 'userPutApi');
     await this.enforcer.addNamedGroupingPolicy('g2', '/v1/user', 'userDelApi');
     // 所有后缀是复数的api，都属于原子操作，即有一个添加失败即全部都失败，理解为db的事物回滚，所以你数据库中有一项同样的规则及全部插入失败

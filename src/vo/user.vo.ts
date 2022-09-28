@@ -24,6 +24,7 @@ export class UserVo implements TUser {
   @Rule(RuleType.string().min(2).max(10).required())
   nickname: string;
 
+  @Rule(RuleType.boolean())
   isAdmin: boolean;
 
   salt: string; // 后台生成，不需要前端传递

@@ -72,7 +72,7 @@ GITHUB_CLIENT_SECRET=密钥
 
 ## 了解 casbin 必备的两个文件
 
-1. `.conf`：[rbac_with_abab.conf](./src/casbin/rbac_with_abab.conf)，该文件作用：告诉 casbin 按照什么样的策略进行控制用户权限，一般通过文件 io 读取或者代码层面(api, 字符串)，本教程采用的是代码层面的字符串形式，如：[casbinFactory.ts](./src/ioc/casbinFactory.ts)
+1. `.conf`：[rbac_with_abac.conf](./src/casbin/rbac_with_abab.conf)，该文件作用：告诉 casbin 按照什么样的策略进行控制用户权限，一般通过文件 io 读取或者代码层面(api, 字符串)，本教程采用的是代码层面的字符串形式，如：[casbinFactory.ts](./src/ioc/casbinFactory.ts)
 2. `.csv`：里面定义的都是用户有哪些角色，角色有哪些权限/权限组，并是否允许通过，存储方式有多种，如：io 读取，db 存储...(详细参考官方文档：[官方文档：数据库存储各字段的含义](https://casbin.io/zh/docs/policy-storage#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F)、[官方文档那个：casbin 适配器](https://casbin.io/zh/docs/adapters))，本教程采用的是`Prisma ORM适配器`结合`MongoDB集合数据库`
 
 ## 项目中 casbin 触发流程
@@ -124,7 +124,7 @@ m = r.sub == p.sub && r.obj == p.obj && r.act == p.act
 - 快速开始往往是学习最快的方法：
   [官方 online casbin 计算器(可能挂了)](https://casbin.org/editor/)
 - 官方计算器源码:
-  [github casbin-editor](https://github.com/casbin/casbin-editor)
+  [GitHub casbin-editor](https://github.com/casbin/casbin-editor)
   > 拉下来启动会报错，修改`tsconfig.json`里，添加`"useUnknownInCatchVariables": false`即可成功运行，不过启动很慢大概`30s内`
 
 ## ACL
@@ -288,4 +288,4 @@ m2 = eval(p2.sub_rule) && r2.obj == p2.obj && r2.act == p2.act && p2.eft == 'all
 
 ## passport + passport-github GitHub 认证流程
 
-> 篇幅较长，另起了一个 md：[passport-github 认证流程](./doc/Github%20authentication.md)
+> 篇幅较长，另起了一个 md：[passport-github 认证流程](./doc/Github%20authentication.md) (passport-github插件采用上一版的认证方式，现github认证已是新版，推荐参考github官方的OAuth2.0方式)

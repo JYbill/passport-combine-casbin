@@ -85,4 +85,13 @@ describe('test/controller/v1/user.controller.test.ts', () => {
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
   });
+
+  // 更新
+  it('should GET /v1/user updateOne', async () => {
+    const res = await createHttpRequest(app).put('/v1/user').set({
+      authorization: token,
+    });
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+  });
 });

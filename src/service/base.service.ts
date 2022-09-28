@@ -35,8 +35,8 @@ export default abstract class BaseService<T> {
 
   /**
    * 获取第一个查询到的对象并返回
-   * @param data
    * @returns
+   * @param args
    */
   async findOne(args: IPrismaSearch<T>): Promise<T> {
     if (this.model === 'user') {
@@ -65,8 +65,8 @@ export default abstract class BaseService<T> {
 
   /**
    * 新增
-   * @param data
    * @returns
+   * @param arg
    */
   async create(arg: IPrismaCreate<T>): Promise<T> {
     return this.prismaClient[this.model].create(arg);
@@ -74,8 +74,8 @@ export default abstract class BaseService<T> {
 
   /**
    * 新增一个
-   * @param data
    * @returns
+   * @param args
    */
   async updateOne(args: IPrismaUpdate<T>): Promise<T> {
     if (this.model === 'user' && !args.select) {

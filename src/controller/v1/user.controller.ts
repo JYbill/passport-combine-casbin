@@ -133,11 +133,13 @@ export class UserController extends BaseController {
   @Validate()
   @IsRoot()
   async delUsers(@Body() idArr: ObjectIdArray) {
-    this.userService.deleteOne({
+    // TODO: 删除多个用户
+    return this.userService.deleteMany({
       where: {
-        contains: idArr,
+        id: {
+          contains: idArr,
+        },
       },
     });
-    return 'ok.';
   }
 }

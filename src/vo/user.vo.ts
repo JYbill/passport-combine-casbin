@@ -1,4 +1,3 @@
-import { TGithub } from './../type';
 /**
  * @file: User.vo.ts
  * @author: xiaoqinvar
@@ -6,7 +5,7 @@ import { TGithub } from './../type';
  * @date: 2022-08-20 17:32:31
  */
 import { Rule, RuleType } from '@midwayjs/validate';
-import { TUser } from './../type';
+import { TUser } from '../type';
 
 /**
  * 所有前端可以传递参数都都进行校验
@@ -27,10 +26,13 @@ export class UserVo implements TUser {
   @Rule(RuleType.boolean())
   isAdmin: boolean;
 
+  @Rule(RuleType.forbidden())
   salt: string; // 后台生成，不需要前端传递
 
+  @Rule(RuleType.forbidden())
   gmt_create: Date;
 
+  @Rule(RuleType.forbidden())
   gmt_modified: Date;
 }
 

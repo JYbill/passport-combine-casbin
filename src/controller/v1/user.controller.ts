@@ -5,7 +5,7 @@
  * @date: 2022-08-12 17:00:15
  */
 import { Body, Controller, Del, Get, Headers, Inject, Logger, Param, Post, Put, Query } from '@midwayjs/decorator';
-import { UserService } from './../../service/user.service';
+import { UserService } from '../../service/user.service';
 import { BadRequestError } from '@midwayjs/core/dist/error/http';
 import { Validate } from '@midwayjs/validate';
 import { UserUpdate, UserVo, UserVoUsername } from '../../vo/user.vo';
@@ -13,13 +13,14 @@ import BaseController from '../base.controller';
 import { Enforcer } from 'casbin';
 import { IsRoot } from '../../decorator/isRoot.decorator';
 import { ObjectIdArray } from '../../vo/objectId.vo';
+import { CasbinService } from '../../service/casbin.service';
 
 @Controller('/v1/user')
 export class UserController extends BaseController {
   @Inject()
   userService: UserService;
-  @Inject('enforcer')
-  enforcer: Enforcer;
+  @Inject()
+  casbinService: CasbinService;
 
   /**
    * 测试：jwt-passport校验中间件
@@ -104,6 +105,7 @@ export class UserController extends BaseController {
    */
   @Post()
   @Validate()
+  @IsRoot()
   async createUser(@Body() user: UserVo) {
     await this.checkSameUsername(user);
     return this.userService.saveUser(user);
@@ -131,7 +133,11 @@ export class UserController extends BaseController {
   @Validate()
   @IsRoot()
   async delUsers(@Body() idArr: ObjectIdArray) {
-    this.logger.info(idArr);
+    this.userService.deleteOne({
+      where: {
+        contains: idArr,
+      },
+    });
     return 'ok.';
   }
 }

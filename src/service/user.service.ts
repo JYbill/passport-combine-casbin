@@ -1,4 +1,4 @@
-import { IPrismaUpdate } from './../interface';
+import { IPrismaUpdate } from '../interface';
 import { JwtService } from '@midwayjs/jwt';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { Config, Inject, Logger, Provide } from '@midwayjs/decorator';
@@ -111,6 +111,7 @@ export class UserService extends BaseService<UserVo> {
 
   /**
    * 更新单个用户
+   * @param id
    * @param user
    * @returns
    */
@@ -125,8 +126,8 @@ export class UserService extends BaseService<UserVo> {
 
   /**
    * 是否是管理员
-   * @param id
    * @returns
+   * @param username
    */
   async isRoot(username: string) {
     // this.logger.info('sub id:' + username);

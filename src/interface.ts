@@ -30,8 +30,30 @@ export interface GithubToken extends Pick<GithubAuthResponse, 'error' | 'error_d
   scope: string;
 }
 
+/**
+ * prisma 操作符接口
+ */
+type TOperation =
+  | 'equals'
+  | 'not'
+  | 'in'
+  | 'notIn'
+  | 'lt'
+  | 'lte'
+  | 'gt'
+  | 'gte'
+  | 'contains'
+  | 'search'
+  | 'mode'
+  | 'startsWith'
+  | 'endsWith'
+  | 'AND'
+  | 'OR'
+  | 'NOT';
+type TPrismaOperation = Record<TOperation, any>;
+
 export interface IPrismaSearch<T> {
-  where?: Partial<T>;
+  where?: Partial<Record<keyof T, any | TPrismaOperation>>;
   select?: FieldSelectable<T, boolean | number>;
 }
 
@@ -41,17 +63,17 @@ export interface IPrismaCreate<T> {
 
 export interface IPrismaUpdate<T> {
   data: Partial<T>;
-  where: Partial<T>;
+  where: Partial<Record<keyof T, any | TPrismaOperation>>;
   select?: Partial<T>;
 }
 
 export interface IPrismaUpsert<T> {
   create: Partial<T>;
   update: Partial<T>;
-  where: Partial<T>;
+  where: Partial<Record<keyof T, any | TPrismaOperation>>;
 }
 
 export interface IPrismaDelete<T> {
   select?: Partial<T>;
-  where: Partial<T>;
+  where: Partial<Record<keyof T, any | TPrismaOperation>>;
 }

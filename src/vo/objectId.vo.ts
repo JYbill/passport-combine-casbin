@@ -4,7 +4,7 @@ import { EcmaUtil } from '../utils/ecma.util';
 /**
  * @file: objectId.vo.ts
  * @author: xiaoqinvar
- * @desc：校验是否是Objectid类型
+ * @desc：校验是否是ObjectId类型
  * @date: 2022-09-11 16:23:40
  */
 const checkObjectIdTypeFunc = (value: string[], helpers: RuleType.CustomHelpers<string[]>) => {

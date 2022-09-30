@@ -41,9 +41,9 @@ export const loginIsBad2RegisterFunc = async app => {
   let { token, success } = await loginFunc(app);
   if (!success) {
     await registerFunc(app);
-    token = await (await loginFunc(app)).token;
+    token = (await loginFunc(app)).token;
   }
-  console.log(token);
+  // console.log(token);
   return token;
 };
 
@@ -87,11 +87,30 @@ describe('test/controller/v1/user.controller.test.ts', () => {
   });
 
   // 更新
-  it('should GET /v1/user updateOne', async () => {
+  it('should PUT /v1/user updateOne', async () => {
     const res = await createHttpRequest(app).put('/v1/user').set({
       authorization: token,
     });
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
   });
+
+  // 新增
+  it('should POST /v1/user ', async () => {
+    const res = await createHttpRequest(app).post('/v1/user').set({
+      authorization: token,
+    });
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(false);
+  });
+
+  // 删除
+  it('should DELETE /v1/user ', async () => {
+    const res = await createHttpRequest(app).delete('/v1/user').set({
+      authorization: token,
+    });
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(false);
+  });
+
 });

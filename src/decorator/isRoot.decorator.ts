@@ -9,6 +9,8 @@ import { BadRequestError } from '@midwayjs/core/dist/error/http';
 import { createCustomMethodDecorator, JoinPoint } from '@midwayjs/decorator';
 import { Context } from '@midwayjs/web';
 import { EnforceContext, Enforcer } from 'casbin';
+import { CasbinService } from '../service/casbin.service';
+import { UserService } from '../service/user.service';
 
 // id
 export const IS_ROOT_KEY = 'decorator:isRoot';
@@ -31,8 +33,11 @@ export const isRootNotice: MethodHandlerFunction = options => {
       const logger = getCurrentMainApp().getLogger();
       const ctx: Context = joinPoint.target['ctx'];
 
+      // 只要是删除操作、更新用户的isAdmin操作都会进行判断是否是管理员
+      const DELETE_METHOD = 'DELETE';
+      const isDeleteMethod = ctx.request.method === DELETE_METHOD;
       const isUpdateAdminRole = ctx.request.body['isAdmin'];
-      if (isUpdateAdminRole) {
+      if (isUpdateAdminRole || isDeleteMethod) {
         const enforcer = await continer.getAsync<Enforcer>('enforcer');
         const enforceContext = new EnforceContext('r', 'p', 'e', 'm3');
         const sub = ctx.state.user;
@@ -40,7 +45,7 @@ export const isRootNotice: MethodHandlerFunction = options => {
         const eft = ctx.request.method;
         const isPass = await enforcer.enforce(enforceContext, sub, obj, eft);
         if (!isPass) {
-          throw new BadRequestError('当前用户不支持修改管理员状态.');
+          throw new BadRequestError('☠️ 当前用户不支持修改');
         }
       }
 

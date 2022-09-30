@@ -126,18 +126,17 @@ export class UserController extends BaseController {
 
   /**
    * 根据id数组删除用户
-   * @param idArr
+   * @param idArrObject
    * @returns
    */
   @Del()
   @Validate()
   @IsRoot()
-  async delUsers(@Body() idArr: ObjectIdArray) {
-    // TODO: 删除多个用户
+  async delUsers(@Body() idArrObject: ObjectIdArray) {
     return this.userService.deleteMany({
       where: {
         id: {
-          contains: idArr,
+          in: idArrObject.ids,
         },
       },
     });

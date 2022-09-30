@@ -9,7 +9,6 @@
 - ORM： prisma ✅
 - DB: mongoDB(需要副本集开启事物) ✅
 - Front: React✅ (有考虑尝试 SSR，可以但没必要，主要是第一次练习用)
-- Cache: redis(后续可能采用做 casbin-watcher 替代内存 watcher) ✅
 
 ## 包含技术点
 
@@ -239,7 +238,7 @@ ant, /user, DELETE
 ```
 
 ## RBAC + ABAC
-
+- 本项目采用的方式
 ```bash
 [request_definition]
 #   用户名，api，方法
@@ -270,13 +269,52 @@ e2 = !some(where (p.eft == deny))
 # 这里我请求是个对象
 # 请求对象中的username要和策略文件中的一致
 # 如果请求对象中的role角色为'root'则不用查策略文件，全部通过
-m = g(r.sub.username, p.sub) && g2(r.obj, p.obj) && r.act == p.act || r.sub.role == 'root'
+m = g(r.sub.username, p.sub) && g2(r.obj, p.obj) && r.act == p.act || r.sub.role == 'ROOT'
 #ABAC
-m2 = eval(p2.sub_rule) && r2.obj == p2.obj && r2.act == p2.act && p2.eft == 'allow' || r.sub.role == 'root'
+m2 = eval(p2.sub_rule) && r2.obj == p2.obj && r2.act == p2.act && p2.eft == 'allow'
+#ABAC: 当且仅当user isAdmin为true才能通过，其实完全可以做成AOP，这里只是演示效果
+m3 = isRoot(r.sub.username, p.obj)
+# m1 m2 m3可以理解为三个方案，m为RBAC方案，m2为ABAC方案，m3为ABAC自定义方法方案
 ```
+- 上代码
+```ts
+// casbin.middleware.ts
+// 整理参数
+// jwt 认证后的用户对象
+const subject = ctx.state.user;
+// 请求的资源，即http://localhost:7001/user/info
+// 这里就是/user/info，底层与koa用法一致 `ctx.path`
+const object = ctx.path;
+// 这里不用多说就是 GET、...、DELETE请求方法
+const effect = ctx.method;
 
-- todo：继续完成...
+// 鉴权操作RBAC
+const auth1 = await this.enforcer.enforce(subject, object, effect);
 
+// 鉴权操作ABAC
+const enforceContext = new EnforceContext('r2', 'p2', 'e2', 'm2');
+const auth2 = await this.enforcer.enforce(enforceContext, subject, object, effect);
+
+// 有一个不通过即视为无权限，只有RBAC通过、ABAC也通过时才能访问
+if (!(auth1 && auth2)) {
+  throw new MidwayHttpError('🚪 当前用户无权限访问', HttpStatus.FORBIDDEN);
+}
+const result = await next();
+return result;
+```
+- m3对应的代码
+```ts
+// casbinFactory.ts 启用m3
+// 启用/:id动态路由解析函数
+// 🌰：/v1/user/12345 通过该工具函数解析成可以访问 /v1/user/:id接口
+await this.enforcer.addNamedMatchingFunc('g2', Util.keyMatch2Func);
+
+// 自定义函数
+await this.enforcer.addFunction('isRoot', this.isRoot.bind(this));
+```
+> m3代码流程：request -> AOP -> m3 -> isRoot自定义方法 -> true or false
+
+- 先推荐代理 + 文档进行理解，如有不懂欢迎`issue` 👏
 > 强烈推荐的参考文档:
 >
 > 1. [讲解各种模型的含义从最基本的 ACL 到 RBAC 到 RBAC 继承和 ABAC 模型(外网推荐)](https://medium.com/wesionary-team/understanding-casbin-with-different-access-control-model-configurations-faebc60f6da5)
@@ -288,4 +326,4 @@ m2 = eval(p2.sub_rule) && r2.obj == p2.obj && r2.act == p2.act && p2.eft == 'all
 
 ## passport + passport-github GitHub 认证流程
 
-> 篇幅较长，另起了一个 md：[passport-github 认证流程](./doc/Github%20authentication.md) (passport-github插件采用上一版的认证方式，现github认证已是新版，推荐参考github官方的OAuth2.0方式)
+> [passport-github 认证流程](./doc/Github%20authentication.md) (passport-github插件采用上一版的认证方式，现github认证已是新版，推荐参考github官方的OAuth2.0方式)

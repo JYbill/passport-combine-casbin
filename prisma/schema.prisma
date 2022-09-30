@@ -22,7 +22,7 @@ model CasbinRule {
 
 model User {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
-  username String @unique() // 查询直接根据casbin查，不用逻辑外键查，加唯一即可
+  username String @unique // 查询直接根据casbin查，不用逻辑外键查，加唯一即可
   nickname String // 昵称
   password String
   salt     String // 信息摘要加密盐
@@ -51,9 +51,10 @@ model Github {
   @@map("github")
 }
 
+// 需要手动添加，前端只允许选择已添加的
 model Role {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  roleName     String   @unique()
+  roleName     String   @unique
   description  String? // 描述
   gmt_create   DateTime @default(now())
   gmt_modified DateTime @default(now()) @updatedAt
@@ -61,9 +62,10 @@ model Role {
   @@map("roles")
 }
 
+// 需要手动添加，前端只允许选择已添加的
 model PermissionGroup {
   id                  String   @id @default(auto()) @map("_id") @db.ObjectId
-  permissionGroupName String   @unique()
+  permissionGroupName String   @unique
   description         String? // 描述
   gmt_create          DateTime @default(now())
   gmt_modified        DateTime @default(now()) @updatedAt
@@ -71,12 +73,22 @@ model PermissionGroup {
   @@map("permission_groups")
 }
 
+// 需要手动添加，前端只允许选择已添加的
 model Permission {
   id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  permissionName String   @unique() // 接口
+  permissionName String   @unique // 接口
   description    String?
   gmt_create     DateTime @default(now())
   gmt_modified   DateTime @default(now()) @updatedAt
 
   @@map("permissions")
+}
+
+// 路由表
+model Route {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  url    String
+  method String
+
+  @@map("route")
 }

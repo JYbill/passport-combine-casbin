@@ -20,8 +20,10 @@ import * as dotenv from 'dotenv';
 import * as axios from '@midwayjs/axios';
 import * as crossDomain from '@midwayjs/cross-domain';
 import { isRootNotice, IS_ROOT_KEY } from './decorator/isRoot.decorator';
+import { InitService } from './service/init.service';
 
 dotenv.config();
+
 @Configuration({
   imports: [egg, jwt, passport, validate, axios, crossDomain],
   importConfigs: [resolve(__dirname, './config')],
@@ -37,7 +39,7 @@ export class ContainerLifeCycle implements ILifeCycle {
   @Inject()
   decoratorService: MidwayDecoratorService;
 
-  async onReady(container: IMidwayContainer) {
+  async onReady(container: IMidwayContainer): Promise<void> {
     // middleware
     //           result -> log -> jwt -> casbin -> request
     // result <- filter <- log <- jwt <- casbin <- request
@@ -55,6 +57,11 @@ export class ContainerLifeCycle implements ILifeCycle {
 
     // 装饰器初始化
     this.decoratorInit();
+
+    // 初始化路由
+    const initService = await container.getAsync<InitService>('initService');
+    initService.initRoute();
+    this.logger.info('[Route] init.');
   }
 
   /**

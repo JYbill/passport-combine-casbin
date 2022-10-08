@@ -90,5 +90,6 @@ model Route {
   url    String
   method String
 
+  @@unique([url, method])
   @@map("route")
 }

@@ -21,6 +21,7 @@ import * as axios from '@midwayjs/axios';
 import * as crossDomain from '@midwayjs/cross-domain';
 import { isRootNotice, IS_ROOT_KEY } from './decorator/isRoot.decorator';
 import { InitService } from './service/init.service';
+import { init } from 'mwts/dist/src/init';
 
 dotenv.config();
 
@@ -58,10 +59,8 @@ export class ContainerLifeCycle implements ILifeCycle {
     // 装饰器初始化
     this.decoratorInit();
 
-    // 初始化路由
-    const initService = await container.getAsync<InitService>('initService');
-    initService.initRoute();
-    this.logger.info('[Route] init.');
+    // 数据库初始化
+    await this.dbInit(container);
   }
 
   /**
@@ -91,11 +90,26 @@ export class ContainerLifeCycle implements ILifeCycle {
     );
   }
 
+  /**
+   * 构造器初始化
+   */
   async decoratorInit() {
     // 实现方法装饰器
     this.decoratorService.registerMethodHandler(IS_ROOT_KEY, isRootNotice);
   }
 
+  /**
+   * 数据库初始化
+   * @param container midway DI容器
+   */
+  async dbInit(container: IMidwayContainer) {
+    // 初始化路由 in db
+    const initService = await container.getAsync<InitService>('initService');
+    await initService.initRoute();
+    this.logger.info('[Route] init.');
+    await initService.initRole();
+    this.logger.info('[Role] init.');
+  }
   async onStop(): Promise<void> {
     // 关闭prisma 连接
     await this.prismaClient.$disconnect();

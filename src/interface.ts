@@ -52,8 +52,11 @@ type TOperation =
   | 'NOT';
 type TPrismaOperation = Record<TOperation, any>;
 
+// prisma where 条件Type
+type TPrismaWhere<T> = Partial<Record<keyof T, any | TPrismaOperation>> | any;
+
 export interface IPrismaSearch<T> {
-  where?: Partial<Record<keyof T, any | TPrismaOperation>>;
+  where?: TPrismaWhere<T>;
   select?: FieldSelectable<T, boolean | number>;
 }
 
@@ -63,17 +66,17 @@ export interface IPrismaCreate<T> {
 
 export interface IPrismaUpdate<T> {
   data: Partial<T>;
-  where: Partial<Record<keyof T, any | TPrismaOperation>>;
+  where: TPrismaWhere<T>;
   select?: Partial<T>;
 }
 
 export interface IPrismaUpsert<T> {
   create: Partial<T>;
   update: Partial<T>;
-  where: Partial<Record<keyof T, any | TPrismaOperation>>;
+  where: TPrismaWhere<T>;
 }
 
 export interface IPrismaDelete<T> {
   select?: Partial<T>;
-  where: Partial<Record<keyof T, any | TPrismaOperation>>;
+  where: TPrismaWhere<T>;
 }

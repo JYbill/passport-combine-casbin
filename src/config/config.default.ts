@@ -26,7 +26,9 @@ export default (appInfo: MidwayAppInfo) => {
           fileLogName: 'request.log',
           format: info => {
             const ctx = info.ctx;
-            return `${info.timestamp} ${info.LEVEL} ${info.pid} [${Date.now() - ctx.startTime}ms ${ctx.method}] ${info.message}`;
+            return `${info.timestamp} ${info.LEVEL} ${info.pid} [${Date.now() - ctx.startTime}ms ${ctx.method}] ${
+              info.message
+            }`;
           },
         },
       },
@@ -90,5 +92,8 @@ export default (appInfo: MidwayAppInfo) => {
         abortEarly: false,
       },
     },
+
+    // default roles config
+    defaultRoles: ['USER', 'MANAGER'],
   } as MidwayConfig;
 };

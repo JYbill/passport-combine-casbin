@@ -22,6 +22,9 @@ export class InitService extends BaseService<TRoute> {
   @Inject()
   webRouterService: MidwayWebRouterService;
 
+  @Config('defaultRoles')
+  defaultRoles: string[];
+
   /**
    * 初始化路由
    */
@@ -31,12 +34,18 @@ export class InitService extends BaseService<TRoute> {
     for (const route of routes) {
       this.upsert({
         where: {
-          method: route.method,
-          url: route.url,
+          url_method: {
+            method: route.method,
+            url: route.url,
+          },
         },
         update: route,
         create: route,
       });
     }
+  }
+
+  async initRole() {
+    const roles = this.defaultRoles;
   }
 }

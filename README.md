@@ -327,3 +327,9 @@ await this.enforcer.addFunction('isRoot', this.isRoot.bind(this));
 ## passport + passport-github GitHub 认证流程
 
 > [passport-github 认证流程](./doc/Github%20authentication.md) (passport-github插件采用上一版的认证方式，现github认证已是新版，推荐参考github官方的OAuth2.0方式)
+
+# 停止更新
+- 原因：
+  1. 工作压力、B事比较多准备跑路
+  2. 考虑准备用nest重新做一个教程
+  3. 前端react没时间做，还跑不起来...（💔😢）
